@@ -1,7 +1,3 @@
-class Hint:
-    pass
-
-
 class Action:
 
     def __init__(self, actionType: int, playerIndex: int, cardIndex: int):
@@ -38,3 +34,33 @@ class Action:
 
     def getCardIndex(self):
         return self.getCardIndex()
+
+class Card:
+
+    def __init__(self, cardColor: str, cardNumber: int):
+        """
+        카드 색과 숫자에 대응하는 생산자
+        :param cardColor: 카드의 색
+        :param cardNumber: 카드의 숫자
+        """
+        self.__cardColor = cardColor
+        self.__cardNumber = cardNumber
+
+    def getColor(self):
+        return self.__cardColor
+
+    def getNumber(self):
+        return self.__cardNumber
+
+    def isCorrespondedHint(self, hint):
+        return self.__cardColor == hint.info or self.__cardNumber == int(hint.info)
+
+class Hint:
+
+    def __init__(self, hint: str):
+        """
+        힌트에 대응하는 생산자
+        :param hint: 주고자하는 힌트
+        """
+        self.info = info
+
