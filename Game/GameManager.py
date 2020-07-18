@@ -14,7 +14,7 @@ class GameManager:
         self.currentPlayerIndex = beginnerIndex
         self.lastPlayerIndex = -1
 
-        self.__hintToken = 10
+        self.__hintToken = 8
         self.__lifeToken = 3
 
         self.cards = cards
@@ -62,6 +62,11 @@ class GameManager:
     def decreaseLifeToken(self):
         assert self.__lifeToken > 0, "life can't be negative value"
         self.__lifeToken -= 1
+
+        # 라이프 토큰이 다 달아버리면 바로 게임 종료
+        if self.__lifeToken == 0:
+            self.onGameEnd()
+
 
     def nextTurn(self):
         self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
@@ -159,7 +164,16 @@ class GameManager:
         pass
 
     def calculateScore(self):
-        pass
+        # 점수 계산
+        score = len(self.__redDiscardedCards) + len(self.__greenDiscardedCards) + len(self.__blueDiscardedCards) + len(self.__whiteDiscardedCards) + len(self.__yellowDiscardedCards)
+        return score
+
+    def canHint(self):
+        # 힌트를 사용 가능한지
+        if self.__hintToken == 0:
+            return False
+        else:
+            return True
 
     def onGameEnd(self):
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
