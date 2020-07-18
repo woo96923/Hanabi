@@ -112,6 +112,7 @@ class GameManager:
             else:
                 discardedCards = self.getDiscardedCards(card.getColor())
                 discardedCards.addCard(card)
+                self.decreaseLifeToken()
 
             playerDeck.useCard(cardIndex)
 
@@ -129,7 +130,6 @@ class GameManager:
             discardedCards = self.getDiscardedCards(card.getColor())
 
             discardedCards.addCard(card)
-
             self.increaseHintToken()
 
             playerDeck.useCard(cardIndex)
@@ -149,6 +149,7 @@ class GameManager:
                     if card.isCorrespondedHint(action.getHint):
                         correspondedIndexes.append(i)
 
+            self.decreaseHintToken()
             self.deliverHintToUI(correspondedIndexes)
 
     def deliverHintToUI(self, cardIndexes: list):
