@@ -40,7 +40,7 @@ class Card:
 
 class Action:
     # 플레이어의 선택에 따른 행동의 정보를 표현하는 클래스.
-    def __init__(self, actionType: int, element, targetIndex: int):
+    def __init__(self, actionType: int, element, targetIndex: int = -1):
         """
         :param actionType: Action의 타입을 의미 1-내려놓기 / 2-버리기 / 3-힌트주기
         :param element: 내고자 하는 카드의 색인(1,2 cardIndex: int), 힌트 객체(3 hint: Hint)
