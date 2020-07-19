@@ -18,8 +18,9 @@ History
 * 2020.07.14 초안 작성 - 조시호
 
 참고한 문서
-* [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/))
+* [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/)
 * [Bites of Code: PyQt Coding Style Guidelines](http://bitesofcode.blogspot.com/2011/10/pyqt-coding-style-guidelines.html)
+* [C# Coding Standards: Rule of Thumb](https://docs.google.com/document/d/1ymFFTVpR4lFEkUgYNJPRJda_eLKXMB6Ok4gpNWOo4rc/edit#heading=h.w8phdtkl6qc8)
 
 
 ## 기본 규칙
