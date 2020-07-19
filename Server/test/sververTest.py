@@ -14,21 +14,26 @@ class Client(threading.Thread):
         self.port = port
 
         #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
-    """
+
     def getMsg(self):
         data = self.connection.recv(1024)
         return data
-    """
 
+
+
+
+
+"""
     def run(self):
         while True:
             data = self.connection.recv(1024)
             if data :
+
                 self.connection.sendall(data)
             else :
                 break
-
         self.connection.close()
+        """
 
 
 class Server:
@@ -46,13 +51,30 @@ class Server:
 
     def broadCast(self):
         data = input('> ')
-        print(self.clients)
+        print(data[:6])##내가 뭘 보냈는지 확인용
         self.send_to_all_clients(data)
+        if data[:6] == '//Turn':
+            temp = threading.Thread(target=self.requestMsgToClient,args=(self.clients[0].ip,self.clients[0].port))
+            temp.start()
+            input('waiting...')
+            #self.requestMsgToClient(self.clients[0].ip,self.clients[0].port)
+            #일단 //turn오면 무조건 첫번째 접속자 한테 메세지 받기
+            #스레드 안쓰니까 밀려서 스레드 사용해봄
+
+
 
     def send_to_client(self, ip, port, msg):
         for client in self.clients :
             if client.ip == ip and client.port == port :
                 client.connection.send(msg.encode())
+
+    def requestMsgToClient(self, ip, port):
+        for client in self.clients :
+            if client.ip == ip and client.port == port :
+                client.connection.send('//turn'.encode())
+                msg = client.getMsg()
+                print (msg)
+                self.send_to_all_clients(msg.decode())
 
     def open_socket(self):
         try:
@@ -79,11 +101,9 @@ class Server:
             print(self.clients)
 
         print('what?')
-
         while True:
 
-            data = input('> ')
-            self.send_to_all_clients(data)
+            self.broadCast()
 
             #if len(self.clients) == 4:
              #   self.send_to_all_clients('The game will begain')
