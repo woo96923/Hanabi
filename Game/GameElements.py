@@ -14,6 +14,9 @@ class Hint:
 
     def isColor(self):
         return type(self.info) == str
+    
+    def __str__(self):
+        return "%s" % str(self.info)
 
 
 class Card:
@@ -36,6 +39,9 @@ class Card:
 
     def isCorrespondedHint(self, hint: Hint):
         return self.__color == hint.info or self.__number == hint.info
+    
+    def __str__(self):
+        return "%s%d" % (self.__color, self.__number)
 
 
 class Action:
@@ -128,4 +134,8 @@ class PlayerDeck:
             if self.__cards[i] == 0:
                 return False
         return True
+    
+    def __str__(self):
+        return "%2s|%2s|%2s|%2s" % (self.__cards[0], self.__cards[1], self.__cards[2], self.__cards[3])
+
 
