@@ -4,6 +4,8 @@ import sys
 import threading
 
 
+
+
 class Client(threading.Thread):
     def __init__(self, ip, port, connection):
         threading.Thread.__init__(self)
@@ -11,7 +13,7 @@ class Client(threading.Thread):
         self.ip = ip
         self.port = port
 
-        self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
+        #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
 
     def run(self):
         while True:
@@ -33,7 +35,13 @@ class Server:
 
     def send_to_all_clients(self, msg):
         for client in self.clients :
+            print('sanding message to ',client.port)
             client.connection.send(msg.encode())
+
+    def broadCast(self):
+        data = input('> ')
+        print(self.clients)
+        self.send_to_all_clients(data)
 
     def send_to_client(self, ip, port, msg):
         for client in self.clients :
@@ -52,14 +60,23 @@ class Server:
     def run(self):
         self.open_socket()
         self.server.listen(5)
+        #b = threading.Thread(target= self.broadCast())
+        #b.start()
 
-        while True :
+        while len(self.clients)!=2 :
             connection, (ip, port) = self.server.accept()
 
             c = Client(ip, port, connection)
             c.start()
 
             self.clients.append(c)
+            print(self.clients)
+
+        print('what?')
+        while True:
+
+            data = input('> ')
+            self.send_to_all_clients(data)
 
             #if len(self.clients) == 4:
              #   self.send_to_all_clients('The game will begain')
