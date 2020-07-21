@@ -43,6 +43,10 @@ class Card:
     def __str__(self):
         return "%s%d" % (self.__color, self.__number)
 
+    def __repr__(self):
+        return self.__str__()
+        # return "Card(\"%s\", %d)" % (self.__color, self.__number)
+
 
 class Action:
     # 플레이어의 선택에 따른 행동의 정보를 표현하는 클래스.
@@ -61,7 +65,7 @@ class Action:
             self.__hint = element
             self.__targetIndex = targetIndex
         else:
-            assert type(element) == int, "invalid element.Element should be integer when actionType is 1or2"
+            assert type(element) == int, "invalid element.Element should be integer when actionType is 1 or 2"
             assert 0 <= element <= 3, "invalid card index."
             self.__cardIndex = element
 
@@ -76,7 +80,7 @@ class Action:
     def getTargetIndex(self):
         # getActionType()을 통해 메소드를 호출 할 수 있는지 확인하고 호출 할 것
         assert self.__actionType == 3
-        return self.targetIndex
+        return self.__targetIndex
 
     def getHint(self):
         # getActionType()을 통해 메소드를 호출 할 수 있는지 확인하고 호출 할 것
