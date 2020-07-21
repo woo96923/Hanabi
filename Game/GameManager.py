@@ -191,7 +191,7 @@ class GameManager:
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        assert len(cardIndexes) is not 0, "길이가 0이면 힌트에 해당하는 카드가 없다는 말인데 구현상 이걸 가능하게 해야하는가?"
+        assert len(cardIndexes) is not 0, "길이가 0이면 힌트에 해당하는 카드가 없다는 말인데 구현상 이걸 가능하게 해야하는가? // 내생각은 그냥 길이가 0인 색은 GUI에서 누르지 못하게만 하면 대지 않을까"
 
         if hint.isNumber():
             hintString = "숫자 %d" % hint.info
@@ -213,7 +213,7 @@ class GameManager:
 
     def calculateScore(self):
         # 점수 계산
-        score = len(self.__redDiscardedCards) + len(self.__greenDiscardedCards) + len(self.__blueDiscardedCards) + len(self.__whiteDiscardedCards) + len(self.__yellowDiscardedCards)
+        score = len(self.__redPlayedCards) + len(self.__greenPlayedCards) + len(self.__bluePlayedCards) + len(self.__whitePlayedCards) + len(self.__yellowPlayedCards)
         return score
 
     def canHint(self):
