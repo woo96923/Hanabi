@@ -63,8 +63,8 @@ def nextTurn(gameManager: GameManager):
     gameManager.nextTurn()
     printBoard(gameManager)
 
-"""
-def testGame1():
+
+def testGameS1():           # 라이프 토큰을 전부 소비하는 테스트
     gm = GameManager(initCards(5), 0, 2)
     gm.distributeCards()
     printBoard(gm)
@@ -123,9 +123,330 @@ def testGame1():
 
     nextTurn(gm)
     gm.doAction(Action(1, 0))
-"""
 
-def testGame2():
+
+def testGameS2():           # 버리기만 하는 테스트
+    gm = GameManager(initCards(1), 3, 1)
+    gm.distributeCards()
+    printBoard(gm)
+    gm.doAction(Action(3, Hint(1), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("G"), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+
+
+def testGameS3():           # 일반적인 게임 플레이
+    gm = GameManager(initCards(2), 3, 3)
+    gm.distributeCards()
+    printBoard(gm)
+    gm.doAction(Action(3, Hint(1), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("Y"), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(5), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("W"), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("G"), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(2), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(2), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("R"), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("R"), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(2), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(3), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(2), 0))
+    
+    nextTurn(gm)
+    gm.doAction(Action(1, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(3), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(1), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(3), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(3), 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(4), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("B"), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint(4), 1))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("W"), 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 0))
+
+    nextTurn(gm)
+    gm.doAction(Action(2, 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(3, Hint("W"), 3))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 2))
+
+    nextTurn(gm)
+    gm.doAction(Action(1, 1))
+
+    nextTurn(gm)
+
+
+def testGame2():            # 25점 만점 테스트
     gm = GameManager(initCards(5), 0, 0)
     gm.distributeCards()
     printBoard(gm)
@@ -151,7 +472,7 @@ def testGame2():
     gm.doAction(Action(3, Hint("R"), 0))
 
     nextTurn(gm)
-    gm.doAction(Action(3, Hint("R"), 2))  #힌트가 0이 되는 지점 다음 순서에 힌트사용시 오류발생 확인
+    gm.doAction(Action(3, Hint("R"), 2))        # 힌트가 0이 되는 지점 다음 순서에 힌트사용시 오류발생 확인
 
     nextTurn(gm)
     gm.doAction(Action(1, 0))
@@ -265,9 +586,12 @@ def testGame2():
     gm.doAction(Action(1, 3))
 
     nextTurn(gm)
-    gm.doAction(Action(1, 3))  #여기서 플레이가 끝나고 점수가 나와야한다. 점수 산출이 이상하였지만 수정
+    gm.doAction(Action(1, 3))       # 여기서 플레이가 끝나고 점수가 나와야한다. 점수 산출이 이상하였지만 수정
 
-    gm.onGameEnd()
+    nextTurn(gm)
 
 
-testGame2()
+# testGameS1()
+# testGameS2()
+testGameS3()
+# testGame2()

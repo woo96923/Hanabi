@@ -149,7 +149,7 @@ class GameManager:
             else:
                 if self.lastPlayerIndex < 0:
                     self.lastPlayerIndex = self.currentPlayerIndex
-                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % self.currentPlayerIndex)      # DEBUG
+                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))      # DEBUG
 
         elif action.getActionType() == 2:         # 버리기   (Discard)
             playerDeck = self.playerDecks[self.currentPlayerIndex]
@@ -171,7 +171,7 @@ class GameManager:
             else:
                 if self.lastPlayerIndex < 0:
                     self.lastPlayerIndex = self.currentPlayerIndex
-                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % self.currentPlayerIndex)  # DEBUG
+                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))      # DEBUG
 
         elif action.getActionType() == 3:         # 힌트주기
             targetIndex = action.getTargetIndex()
@@ -191,7 +191,7 @@ class GameManager:
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        assert len(cardIndexes) is not 0, "길이가 0이면 힌트에 해당하는 카드가 없다는 말인데 구현상 이걸 가능하게 해야하는가? // 내생각은 그냥 길이가 0인 색은 GUI에서 누르지 못하게만 하면 대지 않을까"
+        assert len(cardIndexes) is not 0, "invalid hint"
 
         if hint.isNumber():
             hintString = "숫자 %d" % hint.info
