@@ -17,7 +17,7 @@
 
 History 
 * 2020.07.14 초안 작성 - 조시호
-* 2020.07.24 [기타-5] 매개변수 자료형 명시 항목 내용  - 조시호
+* 2020.07.24 [기타-5] 매개변수 자료형 명시 항목 내용 추가 - 조시호
 
 참고한 문서
 * [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/)
