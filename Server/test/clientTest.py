@@ -40,11 +40,14 @@ while True:
     print('waiting from Server')
     data = s.recv(size)
     print('Recevied form Server : ', data.decode())
-    if data.decode() == '//turn':
-        data = input('> ')
-        s.sendall(data.encode())
-        data = s.recv(size)
-        print('Server sent by eco: ', data)
+    if data.decode()[0:6] == '//turn':#내 차례가 왔을 때만 답변 가능 한번만..
+        if data.decode()[6] == '1': #내 차례라면~
+            data = input('> ')
+            s.sendall(data.encode())
+        else :#내차례까 아니면~
+            print("player number ",data.decode()[6],"is playing Turn...")
+        #data = s.recv(size)
+        #print('Server sent Answer: ', data.decode())
     """
     data = input('> ')
     s.sendall(data.encode())

@@ -16,6 +16,7 @@ class Client(threading.Thread):
         #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
 
     def getMsg(self):
+        print("Waiting msg from the client...")
         data = self.connection.recv(1024)
         return data
 
@@ -53,10 +54,12 @@ class Server:
         data = input('> ')
         print(data[:6])##내가 뭘 보냈는지 확인용
         self.send_to_all_clients(data)
-        if data[:6] == '//Turn':
-            temp = threading.Thread(target=self.requestMsgToClient,args=(self.clients[0].ip,self.clients[0].port))
-            temp.start()
-            input('waiting...')
+        if data[:6] == '//turn':
+            clientNumber = int(data[6]) - 1
+            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
+            #temp = threading.Thread(target=self.requestMsgToClient,args=(self.clients[clientNumber].ip,self.clients[clientNumber].port))
+            #temp.start()
+            #input('waiting...')
             #self.requestMsgToClient(self.clients[0].ip,self.clients[0].port)
             #일단 //turn오면 무조건 첫번째 접속자 한테 메세지 받기
             #스레드 안쓰니까 밀려서 스레드 사용해봄
@@ -69,11 +72,13 @@ class Server:
                 client.connection.send(msg.encode())
 
     def requestMsgToClient(self, ip, port):
+        print("Running requestMsgToClient...")
         for client in self.clients :
             if client.ip == ip and client.port == port :
-                client.connection.send('//turn'.encode())
+                print('Found selected client...',ip,port)
+                #client.connection.send('//turn'.encode())
                 msg = client.getMsg()
-                print (msg)
+                print (msg.decode())
                 self.send_to_all_clients(msg.decode())
 
     def open_socket(self):
@@ -100,7 +105,7 @@ class Server:
             self.clients.append(c)
             print(self.clients)
 
-        print('what?')
+        print('All clients are connected!')
         while True:
 
             self.broadCast()
