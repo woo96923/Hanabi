@@ -3,38 +3,27 @@ import socket
 import sys
 import threading
 
+GAMESTART = 1
+GAMEEND = 0
+GAME = 0
 
-
+playerNumber = 1
 
 class Client(threading.Thread):
+
     def __init__(self, ip, port, connection):
+        global playerNumber
         threading.Thread.__init__(self)
         self.connection = connection
         self.ip = ip
         self.port = port
-
-        #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
+        self.connection.sendall(('//PN'+str(playerNumber)).encode())
+        playerNumber += 1
 
     def getMsg(self):
         print("Waiting msg from the client...")
         data = self.connection.recv(1024)
         return data
-
-
-
-
-
-"""
-    def run(self):
-        while True:
-            data = self.connection.recv(1024)
-            if data :
-
-                self.connection.sendall(data)
-            else :
-                break
-        self.connection.close()
-        """
 
 
 class Server:
@@ -45,42 +34,48 @@ class Server:
         self.server = None
         self.clients = []
 
+    def broadCast(self):
+        global GAME, GAMESTART, GAMEEND
+
+        GAME = GAMESTART
+        print('Game start : //auto\nSelect player : //turn + playernumber')
+        data = input('> ')
+        if data == "//auto":#menu 1
+            while GAME == GAMESTART:
+                for number,client in enumerate(self.clients):
+                    self.send_to_all_clients('//turn'+str(number+1))
+                    self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
+                    if GAME == GAMEEND:
+                        break
+
+        elif data[:6] == '//turn':
+            self.send_to_all_clients(data)
+            clientNumber = int(data[6]) - 1
+            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
+
     def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
         for client in self.clients :
             print('sanding message to ',client.port)
             client.connection.send(msg.encode())
-
-    def broadCast(self):
-        data = input('> ')
-        print(data[:6])##내가 뭘 보냈는지 확인용
-        self.send_to_all_clients(data)
-        if data[:6] == '//turn':
-            clientNumber = int(data[6]) - 1
-            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
-            #temp = threading.Thread(target=self.requestMsgToClient,args=(self.clients[clientNumber].ip,self.clients[clientNumber].port))
-            #temp.start()
-            #input('waiting...')
-            #self.requestMsgToClient(self.clients[0].ip,self.clients[0].port)
-            #일단 //turn오면 무조건 첫번째 접속자 한테 메세지 받기
-            #스레드 안쓰니까 밀려서 스레드 사용해봄
-
-
 
     def send_to_client(self, ip, port, msg):
         for client in self.clients :
             if client.ip == ip and client.port == port :
                 client.connection.send(msg.encode())
 
-    def requestMsgToClient(self, ip, port):
+    def requestMsgToClient(self, ip, port):#특정 client에게 메세지 하나 받아오고 //end를 받을 때 까지 반복
+        global GAME,GAMESTART, GAMEEND
         print("Running requestMsgToClient...")
         for client in self.clients :
             if client.ip == ip and client.port == port :
-                print('Found selected client...',ip,port)
-                #client.connection.send('//turn'.encode())
+                print('Found selected client...', ip, port)
                 while True:
                     msg = client.getMsg()
                     print(msg.decode())
-                    if msg.decode() == '//end':
+                    if msg.decode() == '//endgame':
+                        GAME = GAMEEND
+                        break
+                    elif msg.decode() == '//endturn':
                         break
                     self.send_to_all_clients(msg.decode())
                 self.send_to_all_clients('players Turn is ended')
@@ -101,6 +96,7 @@ class Server:
         #b.start()
 
         while len(self.clients)!=2 :
+
             connection, (ip, port) = self.server.accept()
 
             c = Client(ip, port, connection)
@@ -110,12 +106,10 @@ class Server:
             print(self.clients)
 
         print('All clients are connected!')
+
         while True:
 
             self.broadCast()
-
-            #if len(self.clients) == 4:
-             #   self.send_to_all_clients('The game will begain')
 
         self.server.close()
 
