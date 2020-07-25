@@ -17,6 +17,7 @@
 
 History 
 * 2020.07.14 초안 작성 - 조시호
+* 2020.07.24 [기타-5] 매개변수 자료형 명시 항목 내용  - 조시호
 
 참고한 문서
 * [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/)
@@ -136,19 +137,17 @@ for i in list2: doSomething2()      # 이렇게 연달아 쓰지만 말 것
 ```
 3. import시 * 를 통해 전부를 가져오는 것이 아닌 사용하고자 하는 요소를 확실하게 명시하도록 한다.
 4. import는 한 줄에 한 요소만 작성한다.
-5. 함수 선언 시, 매개변수의 자료형에 대해 명시한다.
+5. 함수 선언 시, 매개변수의 자료형에 대해 명시한다. 단, 여러 종류의 자료형을 허용하는 경우 허용하는 자료형에 대해 매개변수가 아닌 Doc스트링에 명시한다.
 
 ``` python
-def TestForStateDataType(num1: int, num2, num3):
-    num1 = num1[:]
+def TestForStateDataType(num1: int, element):
     '''
     :param num1:
-    :param num2:
-    :param num3:
+    :param element: string, list      # Allow multiple data type
     :return:
     '''
-    return num1
+    함수 구현 생략
 
 
-TestForStateDataType('a', 3, 4)      #이와 같이 사용시 'a'에서 warning을 확인할 수 있다.
+TestForStateDataType('a', 'data')      #이와 같이 사용시 'a'에서 warning을 확인할 수 있다.
 ```
