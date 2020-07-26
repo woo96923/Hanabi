@@ -4,6 +4,8 @@ from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
 from Game.GameManager import GameManager as GameManager
 import random
+import sys
+from PyQt5.QtWidgets import *
 
 
 def initRandomCards():
@@ -65,14 +67,22 @@ def nextTurn(gameManager: GameManager):
 
 
 def testGameS1():           # 라이프 토큰을 전부 소비하는 테스트
+    app = QApplication(sys.argv)
     gm = GameManager(initCards(5), 0, 2)
     gm.distributeCards()
+    # 첫 턴에 카드 배분 후 set
+    gm.setPlayerDeck(gm.getPlayerDeck(0), 0, gm.clientIndex)
+    gm.setPlayerDeck(gm.getPlayerDeck(1), 1, gm.clientIndex)
+    gm.setPlayerDeck(gm.getPlayerDeck(2), 2, gm.clientIndex)
+    gm.setPlayerDeck(gm.getPlayerDeck(3), 3, gm.clientIndex)
+    gm.board.show()
     printBoard(gm)
+
     gm.doAction(Action(3, Hint(1), 3))
 
     nextTurn(gm)
     gm.doAction(Action(1, 2))
-
+    app.exec_()
     nextTurn(gm)
     gm.doAction(Action(1, 3))
 
@@ -783,9 +793,25 @@ def testGame2():            # 25점 만점 테스트
 
     nextTurn(gm)
 
-
-# testGameS1()
+testGameS1()
 # testGameS2()
-# testGameS3()
-testGame1()
+#testGameS3()
+# testGame1()
 # testGame2()
+def gametestManual():
+    gm = GameManager(initCards(5), 0, 0)
+    gm.distributeCards()
+    printBoard(gm)
+
+    while True:
+        a = gm.client.run()
+        if len(a)==3:
+            gm.doAction(Action(int(a[0]), Hint(a[1]), int(a[2]) ))
+
+        elif len(a)==2:
+            gm.doAction(Action(int(a[0]), int(a[1])))
+
+        nextTurn(gm)
+
+
+# gametestManual()

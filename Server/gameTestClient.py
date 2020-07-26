@@ -7,17 +7,16 @@ port = 6666
 size = 1024
 s = None
 playerNumber = -1
+serverIP = '192.168.43.239'
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = socket.gethostname()
-    s.connect(('127.0.0.1', port))
+    s.connect((serverIP, port))
     print('connected with Server')
     recevePN = s.recv(size)
     playerNumber = recevePN.decode()[4]
     print('Your player number is ', playerNumber)
-    # r = threading.Thread(target=ReceveOreder(size))
-    # r.start()
 
 except socket.error:
     if s:
@@ -37,4 +36,3 @@ while True:
                 s.recv(size)
         else :#내차례까 아니면~
             print("player number ",data.decode()[6],"is playing Turn...")
-

@@ -2,20 +2,21 @@ from Game.GameElements import Hint as Hint
 from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
-from GUI import HanabiAlpha01 as gameboard
-
+from GUI.HanabiAlpha01 import HanabiGui
+from GUI.HanabiAlpha01 import SetCardDesign
 # 시작버튼을 누르면 서버에서 게임 시작시 정보를 받아 게임매니저를 생성하고 게임이 시작된다.
-class GameManager:
+from Server.gameTestClient2 import client
 
+class GameManager:
     def __init__(self, cards: list, clientIndex: int, beginnerIndex: int):
         self.playerDecks = [PlayerDeck() for i in range(4)]
         self.clientIndex = clientIndex
         self.currentPlayerIndex = beginnerIndex
         self.lastPlayerIndex = -1
-
+        self.board = HanabiGui()
         self.__hintToken = 8
         self.__lifeToken = 3
-
+        #self.client = client('192.168.43.239', 6666)
         self.cards = cards
 
         self.__redPlayedCards = []
@@ -114,6 +115,19 @@ class GameManager:
         elif color == "W":
             return self.__whiteDiscardedCards
         return self.__yellowDiscardedCards
+
+    def setPlayerDeck(self, deck, idx, clientIdx):
+        deck_ = (str(deck).replace(" ", "").split("|"))
+        # print(deck_)
+        #내 카드는 보이지 않게
+        if idx == clientIdx:
+            for deckIndex in range(4):
+                self.board.deckList[idx][deckIndex].setText("")
+                SetCardDesign("mine", self.board.deckList[idx][deckIndex])
+        else:
+            for deckIndex in range(4):
+                self.board.deckList[idx][deckIndex].setText(deck_[deckIndex])
+                SetCardDesign(deck_[deckIndex][0], self.board.deckList[idx][deckIndex])
 
     def doAction(self, action: Action):
         """
