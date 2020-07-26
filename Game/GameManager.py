@@ -2,7 +2,7 @@ from Game.GameElements import Hint as Hint
 from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
-
+from GUI import HanabiAlpha01 as gameboard
 
 # 시작버튼을 누르면 서버에서 게임 시작시 정보를 받아 게임매니저를 생성하고 게임이 시작된다.
 class GameManager:
