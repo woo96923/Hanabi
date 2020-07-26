@@ -6,6 +6,7 @@ import threading
 GAMESTART = 1
 GAMEEND = 0
 GAME = 0
+serverIP = ''
 
 playerNumber = 1
 
@@ -114,5 +115,5 @@ class Server:
         self.server.close()
 
 if __name__ == '__main__':
-    s = Server('127.0.0.1', 6666)
+    s = Server(serverIP, 6666)
     s.run()
