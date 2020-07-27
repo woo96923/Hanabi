@@ -6,7 +6,6 @@ import threading
 GAMESTART = 1
 GAMEEND = 0
 GAME = 0
-serverIP = ''
 
 playerNumber = 1
 
@@ -56,7 +55,7 @@ class Server:
 
     def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
         for client in self.clients :
-            print('sanding message to ',client.port)
+            print('sanding message to ',client.port,msg)
             client.connection.send(msg.encode())
 
     def send_to_client(self, ip, port, msg):
@@ -70,16 +69,18 @@ class Server:
         for client in self.clients :
             if client.ip == ip and client.port == port :
                 print('Found selected client...', ip, port)
-                while True:
-                    msg = client.getMsg()
-                    print(msg.decode())
-                    if msg.decode() == '//endgame':
-                        GAME = GAMEEND
-                        break
-                    elif msg.decode() == '//endturn':
-                        break
-                    self.send_to_all_clients(msg.decode())
-                self.send_to_all_clients('players Turn is ended')
+
+                msg = client.getMsg()
+                print(msg.decode())
+                '''
+                if msg.decode() == '//endgame':
+                    GAME = GAMEEND
+                    break
+                elif msg.decode() == '//endturn':
+                    break
+                '''
+                self.send_to_all_clients(msg.decode())
+        #self.send_to_all_clients('players Turn is ended')
 
     def open_socket(self):
         try:
@@ -115,5 +116,5 @@ class Server:
         self.server.close()
 
 if __name__ == '__main__':
-    s = Server(serverIP, 6666)
+    s = Server('', 6666)
     s.run()
