@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import types
 import time
 
 class client():
@@ -32,6 +33,10 @@ class client():
             sys.exit(1)
 
     def run(self):
+        '''
+
+        :return: 2개 또는 3개의 숫자 또는 문자
+        '''
         #print('waiting from Server')
         data = self.s.recv(self.size)
         print('Recevied form Server : ', data.decode())
@@ -39,14 +44,14 @@ class client():
             if data.decode()[6] == str(self.playerNumber): #내 차례라면~
                 data = input('> ')
                 self.s.sendall(data.encode())
-                data = self.s.recv(self.size)
-                print(data.decode())
-                return data.decode()
+
             else :#내차례까 아니면~
                 print("player number ", self.playerNumber, "is playing Turn...")
-                data = self.s.recv(self.size)
-                print(data.decode())
-                return data.decode()
+
+            data = self.s.recv(self.size)
+            assert data.decode()[0:2] == '//', "invalid commend format"
+            print(data.decode())
+            return data.decode()[2:]
 '''
     def ifMyTurn(self):
         data = input('> ')

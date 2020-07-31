@@ -793,13 +793,15 @@ def gametestManual():
 
     while True:
         a = gm.client.run()
-        print(a)
 
-        if len(a)==5:
-            gm.doAction(Action(int(a[2]), Hint(str(a[3])), int(a[4]) ))
+        if len(a)==3:
+            if a[1] == '1' or '2' or '3' or '4' or '5':
+                gm.doAction(Action(int(a[0]), Hint(int(a[1])), int(a[2]) ))
+            else:
+                gm.doAction(Action(int(a[0]), Hint(str(a[1])), int(a[2])))
 
-        elif len(a)==4:
-            gm.doAction(Action(int(a[2]), int(a[3])))
+        elif len(a)==2:
+            gm.doAction(Action(int(a[0]), int(a[1])))
 
         nextTurn(gm)
 
