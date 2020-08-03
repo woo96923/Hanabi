@@ -46,11 +46,12 @@ class client():
                 self.s.sendall(data.encode())
 
             else :#내차례까 아니면~
-                print("player number ", self.playerNumber, "is playing Turn...")
+                print("Other players turn is  playing... ")
 
             data = self.s.recv(self.size)
             assert data.decode()[0:2] == '//', "invalid commend format"
             print(data.decode())
+            print(data.decode()[2], data.decode()[3], data.decode()[4])
             return data.decode()[2:]
 '''
     def ifMyTurn(self):
@@ -65,7 +66,7 @@ class client():
         '''
 
 '''
-c=client('192.168.43.239',6666)
+c = client('localhost', 6666)
 c.connectWithServer()
 while True:
     c.run()

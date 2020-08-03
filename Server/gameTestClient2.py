@@ -49,8 +49,9 @@ class client():
                 print("player number ", self.playerNumber, "is playing Turn...")
 
             data = self.s.recv(self.size)
-            assert data.decode()[0:2] == '//', "invalid commend format"
             print(data.decode())
+            assert data.decode()[0:2] == '//', "invalid commend format"
+
             return data.decode()[2:]
 
 

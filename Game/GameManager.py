@@ -206,7 +206,7 @@ class GameManager:
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        assert len(cardIndexes) != 0, "invalid hint"
+        #assert len(cardIndexes) != 0, "invalid hint"
 
         if hint.isNumber():
             hintString = "숫자 %d" % hint.info
@@ -222,8 +222,14 @@ class GameManager:
             else:
                 hintString = "노란색"
 
-        print("%d번 플레이어의 힌트: %d번 플레이어의 %s번째 카드는 %s 입니다."
-              % (self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+        if len(cardIndexes) == 0:
+            print("%d번 플레이어의 힌트: %d번 플레이어의 %s 카드는 없습니다."
+                  % (self.currentPlayerIndex, targetIndex, hintString))
+
+        else:
+            print("%d번 플레이어의 힌트: %d번 플레이어의 %s번째 카드는 %s 입니다."
+                  % (self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+
         print("힌트 토큰이 하나 감소합니다.")
 
     def calculateScore(self):

@@ -793,9 +793,10 @@ def gametestManual():
 
     while True:
         a = gm.client.run()
+        print(a)
 
         if len(a)==3:
-            if a[1] == '1' or '2' or '3' or '4' or '5':
+            if a[1] in ['1','2','3','4','5']:
                 gm.doAction(Action(int(a[0]), Hint(int(a[1])), int(a[2]) ))
             else:
                 gm.doAction(Action(int(a[0]), Hint(str(a[1])), int(a[2])))

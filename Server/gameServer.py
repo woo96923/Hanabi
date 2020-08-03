@@ -6,9 +6,9 @@ import threading
 GAMESTART = 1
 GAMEEND = 0
 GAME = 0
-MAXPLAYERNUMBER = 2
+MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
 
-playerNumber = 1
+playerNumber = 0
 
 class Client(threading.Thread):
 
@@ -52,13 +52,13 @@ class Server:
         global GAME, GAMESTART, GAMEEND
         #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
         GAME = GAMESTART
-        print('Game start : //auto\nSelect player : //turn + playernumber')
+        print('Game start : //game\nSelect player : //turn + playernumber')
         data = input('> ')
 
-        if data == "//auto":#menu 1
+        if data == "//game":#menu 1
             while GAME == GAMESTART:
                 for number, client in enumerate(self.clients):
-                    self.send_to_all_clients('//turn'+str(number+1))
+                    self.send_to_all_clients('//turn'+str(number))
                     self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
                     if GAME == GAMEEND:
                         break
