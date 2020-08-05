@@ -3,7 +3,6 @@ from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
 from Game.GameManager import GameManager as GameManager
-from Server.gameTestClient import client
 import random
 
 
@@ -22,15 +21,16 @@ def initRandomCards():
 
 
 def initCards(number=0):
-    if number == 1:
+
+    if number is 1:
         return [Card("Y", 3), Card("R", 4), Card("G", 1), Card("R", 5), Card("G", 1), Card("W", 4), Card("W", 4), Card("Y", 4), Card("W", 3), Card("W", 1), Card("R", 4), Card("Y", 1), Card("G", 1), Card("B", 4), Card("B", 5), Card("R", 3), Card("Y", 4), Card("B", 4), Card("W", 2), Card("W", 1), Card("B", 3), Card("B", 3), Card("B", 1), Card("R", 2), Card("Y", 3), Card("R", 2), Card("G", 3), Card("B", 1), Card("R", 3), Card("Y", 1), Card("W", 3), Card("G", 4), Card("Y", 2), Card("B", 2), Card("R", 1), Card("G", 3), Card("W", 2), Card("R", 1), Card("Y", 5), Card("G", 4), Card("R", 1), Card("B", 1), Card("Y", 1), Card("G", 2), Card("G", 2), Card("W", 5), Card("G", 5), Card("Y", 2), Card("B", 2), Card("W", 1)]
-    if number == 2:
+    if number is 2:
         return [Card("R", 5), Card("G", 4), Card("B", 3), Card("B", 5), Card("G", 1), Card("B", 1), Card("W", 4), Card("W", 1), Card("Y", 2), Card("G", 1), Card("G", 2), Card("W", 5), Card("R", 3), Card("Y", 1), Card("G", 2), Card("Y", 4), Card("W", 1), Card("B", 2), Card("W", 2), Card("W", 1), Card("B", 1), Card("Y", 4), Card("R", 2), Card("B", 3), Card("G", 3), Card("R", 1), Card("Y", 3), Card("W", 3), Card("R", 3), Card("B", 4), Card("R", 1), Card("Y", 1), Card("G", 4), Card("B", 1), Card("G", 3), Card("G", 5), Card("B", 2), Card("Y", 5), Card("G", 1), Card("W", 2), Card("R", 1), Card("B", 4), Card("R", 2), Card("Y", 1), Card("W", 4), Card("Y", 3), Card("Y", 2), Card("R", 4), Card("W", 3), Card("R", 4)]
-    if number == 3:
+    if number is 3:
         return [Card("W", 4), Card("Y", 4), Card("W", 3), Card("Y", 5), Card("G", 1), Card("B", 1), Card("Y", 2), Card("Y", 3), Card("B", 3), Card("R", 4), Card("B", 1), Card("W", 1), Card("B", 3), Card("W", 2), Card("B", 5), Card("B", 4), Card("R", 2), Card("R", 4), Card("G", 1), Card("R", 1), Card("W", 1), Card("R", 5), Card("Y", 3), Card("Y", 4), Card("W", 3), Card("R", 1), Card("R", 1), Card("R", 3), Card("G", 2), Card("W", 2), Card("G", 2), Card("G", 3), Card("R", 2), Card("Y", 1), Card("Y", 1), Card("B", 1), Card("Y", 1), Card("Y", 2), Card("B", 2), Card("W", 4), Card("B", 2), Card("W", 5), Card("G", 3), Card("R", 3), Card("G", 5), Card("B", 4), Card("G", 4), Card("G", 1), Card("G", 4), Card("W", 1)]
-    if number == 4:
+    if number is 4:
         return [Card("G", 3), Card("Y", 2), Card("B", 3), Card("R", 4), Card("R", 3), Card("G", 2), Card("R", 3), Card("W", 5), Card("W", 1), Card("Y", 3), Card("B", 3), Card("G", 2), Card("Y", 1), Card("W", 1), Card("R", 1), Card("G", 4), Card("R", 1), Card("W", 3), Card("Y", 4), Card("B", 4), Card("W", 4), Card("W", 4), Card("G", 1), Card("Y", 1), Card("B", 2), Card("G", 3), Card("W", 2), Card("W", 2), Card("B", 1), Card("Y", 5), Card("R", 2), Card("R", 2), Card("W", 1), Card("B", 1), Card("R", 1), Card("Y", 3), Card("G", 5), Card("R", 5), Card("Y", 4), Card("G", 1), Card("B", 1), Card("B", 4), Card("W", 3), Card("G", 4), Card("Y", 1), Card("R", 4), Card("Y", 2), Card("B", 5), Card("G", 1), Card("B", 2)]
-    if number == 5:
+    if number is 5:
         return [Card("R", 1), Card("B", 2), Card("R", 3), Card("R", 2), Card("R", 4), Card("R", 4), Card("G", 3), Card("W", 5), Card("Y", 3), Card("B", 3), Card("B", 3), Card("B", 1), Card("G", 3), Card("R", 2), Card("R", 1), Card("B", 5), Card("Y", 1), Card("Y", 2), Card("B", 4), Card("G", 5), Card("G", 1), Card("G", 1), Card("G", 4), Card("W", 1), Card("W", 2), Card("W", 1), Card("G", 2), Card("R", 1), Card("R", 3), Card("R", 5), Card("B", 1), Card("W", 3), Card("Y", 2), Card("W", 2), Card("G", 4), Card("W", 4), Card("Y", 1), Card("B", 2), Card("G", 1), Card("W", 3), Card("Y", 1), Card("Y", 3), Card("G", 2), Card("Y", 4), Card("B", 1), Card("W", 4), Card("W", 1), Card("B", 4), Card("Y", 4), Card("Y", 5)]
     return initRandomCards()
 

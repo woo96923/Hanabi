@@ -7,6 +7,7 @@ from Server.gameTestClient import client
 
 SERVERIP = 'localhost' #문자열 형식으로 ex) '127.0.0.1'
 SERVERPORT = 6666
+from GUI import HanabiAlpha01 as gameboard
 
 # 시작버튼을 누르면 서버에서 게임 시작시 정보를 받아 게임매니저를 생성하고 게임이 시작된다.
 class GameManager:
@@ -45,13 +46,12 @@ class GameManager:
         아직은 수동으로 IP주소를 수정해주어야함
         '''
 
-
     def isCardsEmpty(self):
         # 카드더미가 비었는지 확인하는 함수
         return len(self.cards) == 0
 
     def isGameEnd(self):
-        return self.__lifeToken == 0
+        return self.__lifeToken is 0
 
     def giveOneCard(self, playerIndex: int):
         """
@@ -206,18 +206,17 @@ class GameManager:
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        #assert len(cardIndexes) != 0, "invalid hint"
-
+        assert len(cardIndexes) is not 0, "invalid hint"
         if hint.isNumber():
             hintString = "숫자 %d" % hint.info
         else:
-            if hint.info == "R":
+            if hint.info is "R":
                 hintString = "빨간색"
-            elif hint.info == "G":
+            elif hint.info is "G":
                 hintString = "초록색"
-            elif hint.info == "B":
+            elif hint.info is "B":
                 hintString = "파란색"
-            elif hint.info == "W":
+            elif hint.info is "W":
                 hintString = "하얀색"
             else:
                 hintString = "노란색"
@@ -239,10 +238,9 @@ class GameManager:
 
     def canHint(self):
         # 힌트를 사용 가능한지
-        return self.__hintToken != 0
+        return self.__hintToken is not 0
 
     def onGameEnd(self):
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
         print()
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
-        #return 0
