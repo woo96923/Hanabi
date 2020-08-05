@@ -21,6 +21,7 @@ def initRandomCards():
 
 
 def initCards(number=0):
+
     if number is 1:
         return [Card("Y", 3), Card("R", 4), Card("G", 1), Card("R", 5), Card("G", 1), Card("W", 4), Card("W", 4), Card("Y", 4), Card("W", 3), Card("W", 1), Card("R", 4), Card("Y", 1), Card("G", 1), Card("B", 4), Card("B", 5), Card("R", 3), Card("Y", 4), Card("B", 4), Card("W", 2), Card("W", 1), Card("B", 3), Card("B", 3), Card("B", 1), Card("R", 2), Card("Y", 3), Card("R", 2), Card("G", 3), Card("B", 1), Card("R", 3), Card("Y", 1), Card("W", 3), Card("G", 4), Card("Y", 2), Card("B", 2), Card("R", 1), Card("G", 3), Card("W", 2), Card("R", 1), Card("Y", 5), Card("G", 4), Card("R", 1), Card("B", 1), Card("Y", 1), Card("G", 2), Card("G", 2), Card("W", 5), Card("G", 5), Card("Y", 2), Card("B", 2), Card("W", 1)]
     if number is 2:
@@ -783,9 +784,32 @@ def testGame2():            # 25점 만점 테스트
 
     nextTurn(gm)
 
+def gametestManual():
 
-# testGameS1()
+    gm = GameManager(initCards(5), 0, 0)
+    gm.client.connectWithServer()
+    gm.distributeCards()
+    printBoard(gm)
+
+    while True:
+        a = gm.client.run()
+        print(a)
+
+        if len(a)==3:
+            if a[1] in ['1','2','3','4','5']:
+                gm.doAction(Action(int(a[0]), Hint(int(a[1])), int(a[2]) ))
+            else:
+                gm.doAction(Action(int(a[0]), Hint(str(a[1])), int(a[2])))
+
+        elif len(a)==2:
+            gm.doAction(Action(int(a[0]), int(a[1])))
+
+        nextTurn(gm)
+
+gametestManual()
+#testGameS1()
 # testGameS2()
 # testGameS3()
-testGame1()
+#testGame1()
 # testGame2()
+
