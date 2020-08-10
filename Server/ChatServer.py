@@ -118,13 +118,13 @@ class Server:
                 self.server.close()
             sys.exit(1)
 
+
     def run(self):
         global MAXPLAYERNUMBER
         self.open_socket()
         self.server.listen(MAXPLAYERNUMBER)
         #b = threading.Thread(target= self.broadCast())
         #b.start()
-
         while len(self.clients)!=MAXPLAYERNUMBER :
 
             connection, (ip, port) = self.server.accept()
@@ -144,5 +144,5 @@ class Server:
         self.server.close()
 
 if __name__ == '__main__':
-    s = Server('', 6666) # '' 이렇게 IP부분에 빈칸으로 두면 모든 IP의 접속을 허용해준다고하는데 사실 정확하게는 모르겠어요ㅎ
+    s = Server('', 7777) # '' 이렇게 IP부분에 빈칸으로 두면 모든 IP의 접속을 허용해준다고하는데 사실 정확하게는 모르겠어요ㅎ
     s.run()
