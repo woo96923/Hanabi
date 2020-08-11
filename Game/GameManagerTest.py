@@ -787,5 +787,5 @@ def testGame2():            # 25점 만점 테스트
 # testGameS1()
 # testGameS2()
 # testGameS3()
-testGame1()
+#testGame1()
 # testGame2()

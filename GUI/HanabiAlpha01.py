@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtGui import QImage, QPalette, QBrush, QIcon
 from PyQt5.QtCore import Qt, QRect
+from Game.GameManager import GameManager as GM
+from Game.GameManagerTest import initCards
 FONTSIZE = 10
 
 #파일명만 바꿔서
@@ -14,215 +16,48 @@ GiveHintAlpha = uic.loadUiType("testUI02.ui")[0]
 
 SIDE_MARGIN = 1
 
+
 class HanabiGui(QMainWindow, MainAlpha):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        #배경 사진 넣기
+
+        # 배경 사진 넣기
         background = QImage("background.jpeg")
         palette = QPalette()
         palette.setBrush(10, QBrush(background))
         self.setPalette(palette)
+
+        # 임의 부여함.
+        self.beginnerIndex = 0
+        self.clientIndex = 0
+
+        '''
+        initCards : 랜덤으로 줘야 해 - 서버에서 해서 뿌려야 할 것 같음. 진영 용택 논의 필요
+        clientIndex : 서버에서 받아야 함
+        beginnerIndex : 서버에서 받아야 함
+        '''
+        self.gm = GM(initCards(5), self.clientIndex, self.beginnerIndex)
+        self.gm.distributeCards()
         self.btnGiveHint.clicked.connect(self.clickedGiveHint)
         self.deckList = [[self.player0Deck0, self.player0Deck1, self.player0Deck2, self.player0Deck3],
                          [self.player1Deck0, self.player1Deck1, self.player1Deck2, self.player1Deck3],
                          [self.player2Deck0, self.player2Deck1, self.player2Deck2, self.player2Deck3],
                          [self.player3Deck0, self.player3Deck1, self.player3Deck2, self.player3Deck3]]
+        for deck in self.gm.playerDecks:
+            print(deck)
+        for i, deck in enumerate(self.deckList):
+            # clinet 위치를 어떻게 잡느냐가 관건..
+            if i == self.clientIndex:
+                for j in range(4):
+                    SetCardDesign("mine", deck[j])
+            else:
+                for j in range(4):
+                    SetCardDesign(self.gm.playerDecks[i].getCardOrNone(j).getColor(), deck[j])
 
         self.btnThrow.clicked.connect(self.ShowThrowDeck)
         self.btnDrop.clicked.connect(self.ShowDropDeck)
         self.btnGiveHint.clicked.connect(self.ShowGiveHint)
-
-        #버린 카드 개수표
-        throwDeck = 1
-        deckInfo = "B2"
-        throwB2 = 0#버려진 B2개수, game에서 정한 리스트 있을 것 같아서 그거 갖구오려고 대충 지었어요
-        if throwDeck:
-            if deckInfo =="B2":
-                throwB2 = throwB2 + 1
-                printthrowB2 = "%d" %throwB2
-                self.throwB2.setText(printthrowB2)
-
-        #카드 가져오기. 낸경우+버린경우
-        getDeck =1#가져와야하는경우1
-        remainDeck = 10#남은 카드수
-        if getDeck:
-            remainDeck = remainDeck -1
-            printRemainDeck = "남은카드\n%d" %remainDeck
-            self.remainDeck.setText(printRemainDeck)
-            getDeck=0
-
-        number = 1
-        color = "WHITE"
-        hintCategory =1#숫자 힌트면 0 색 힌트면 1
-        if hintCategory == 0:
-            hint = "카드 번호가 %d" % number
-        if hintCategory == 1:
-            hint = " 카드 색이 %s" % color
-        presentPlayer = 3
-        pickedPlayer = 2
-        giveHint = "player%d 가 player%d에게 힌트를 주었습니다.\n;%s" % (presentPlayer, pickedPlayer, hint)
-        self.notice.setText(giveHint)
-
-
-
-
-
-        #힌트 삭제, 생성
-        life =3#남은 생명
-        loseLife=1#life 잃은 경우 1 외엔 0
-        hint = 8#남은 힌트
-        giveHint = 1#힌트 주면 1 나머지경우 0
-        throwDeck = 1#카드버림
-        if loseLife:
-            if life ==3:
-                self.lifeToken2.setText("X")
-            elif life == 2 :
-                self.hintToken1.setText("X")
-            elif life ==1:
-                self.lifeToken0.setText("X")
-                print("GAMEOVER")
-            loseLife=0
-            life = life - 1
-
-        if throwDeck &(hint<8):
-            if hint ==7:
-                self.hintToken7.setText("O")
-            elif hint ==6:
-                self.hintToken6.setText("O")
-            elif hint == 5 :
-                self.hintToken5.setText("O")
-            elif hint ==4:
-                self.hintToken4.setText("O")
-            elif hint ==3:
-                self.hintToken3.setText("O")
-            elif hint == 2 :
-                self.hintToken2.setText("O")
-            elif hint ==1:
-                self.hintToken1.setText("O")
-            elif hint ==0:
-                self.hintToken0.setText("O")
-            throwDeck=0
-            hint = hint + 1
-
-        if giveHint & (hint >0):
-            if hint == 8:
-                self.hintToken7.setText("X")
-            elif hint ==7:
-                self.hintToken6.setText("X")
-            elif hint ==6:
-                self.hintToken5.setText("X")
-            elif hint == 5 :
-                self.hintToken4.setText("X")
-            elif hint ==4:
-                self.hintToken3.setText("X")
-            elif hint ==3:
-                self.hintToken2.setText("X")
-            elif hint == 2 :
-                self.hintToken1.setText("X")
-            elif hint ==1:
-                self.hintToken0.setText("X")
-            hint = hint-1
-            giveHint=0
-
-
-
-
-
-        #mainboard에 카드 내려놓기 과정
-        getScore = 1 #점수 얻으면 1
-        #테스트용 반복문
-        for i in range(5):
-            if i ==0:
-                dropDeck="G1"#낸 카드 ? 이름 못짓겠어요ㅠㅠ
-            elif i==1:
-                dropDeck="G2"
-            elif i==2:
-                dropDeck="G3"
-            elif i==3:
-                dropDeck="G4"
-            else:
-                dropDeck="G5"
-            #다음 분류는 Deck 정보 저장된 형식에 따라 바뀔 수 있어요! (실행 내용은 바뀌지 않음
-            if getScore:
-                if dropDeck =="R1":
-                    self.mainR2.setStyleSheet("background-color : rgb(255, 79, 79);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)"
-                                              )
-                    self.mainR2.setText(dropDeck)
-                elif dropDeck =="R2":
-                    self.mainR2.setStyleSheet("background-color : rgb(255, 79, 79);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)"
-                                              )
-                    self.mainR2.setText(dropDeck)
-                elif dropDeck =="R3":
-                    self.mainR3.setStyleSheet("background-color : rgb(255, 79, 79);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)"
-                                              )
-                    self.mainR3.setText(dropDeck)
-                elif dropDeck =="R4":
-                    self.mainR4.setStyleSheet("background-color : rgb(255, 79, 79);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)"
-                                              )
-                    self.mainR4.setText(dropDeck)
-                elif dropDeck =="R5":
-                    self.mainR5.setStyleSheet("background-color : rgb(255, 79, 79);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)"
-                                              )
-                    self.mainR5.setText(dropDeck)
-                elif dropDeck =="G1":
-                    self.mainG1.setStyleSheet("background-color : rgb(11, 222, 0);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)")
-                    self.mainG1.setText(dropDeck)
-                elif dropDeck =="G2":
-                    self.mainG2.setStyleSheet("background-color : rgb(11, 222, 0);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)")
-                    self.mainG2.setText(dropDeck)
-                elif dropDeck =="G3":
-                    self.mainG3.setStyleSheet("background-color : rgb(11, 222, 0);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)")
-                    self.mainG3.setText(dropDeck)
-                elif dropDeck =="G4":
-                    self.mainG4.setStyleSheet("background-color : rgb(11, 222, 0);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)")
-                    self.mainG4.setText(dropDeck)
-                elif dropDeck =="G5":
-                    self.mainG5.setStyleSheet("background-color : rgb(11, 222, 0);"
-                                              "border-width: 2px;"
-                                              "border-style : solid;"
-                                              "border-radius: 20px;"
-                                              "border-color : rgb(0, 0, 0)")
-                    self.mainG5.setText(dropDeck)
-
-
-
         #다음 내용은 불변.
         # 창 아이콘
         self.setWindowIcon(QIcon('Hanabi.PNG'))
@@ -245,7 +80,8 @@ class HanabiGui(QMainWindow, MainAlpha):
 
     def ShowGiveHint(self):
         print("Opening a GiveHint window...")
-        self.w = AppGiveHint()
+        # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다.
+        self.w = AppGiveHint(self.gm.playerDecks)
         self.w.setGeometry(QRect(700, 400, 300, 200))
         self.w.show()
 
@@ -431,45 +267,54 @@ class AppDropDeck(QWidget):
 
 
 class AppGiveHint(QWidget): #힌트주기 창
-    def __init__(self):
+    def __init__(self, playerDecks):
         QWidget.__init__(self)
+        self.playerDecks = playerDecks
+        self.playerNum = 0
+        self.layout2 = QHBoxLayout()
+        self.deck0 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(0)))
+        self.deck1 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(1)))
+        self.deck2 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(2)))
+        self.deck3 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(3)))
+
     def paintEvent(self, e):
         self.setWindowTitle('힌트 주기')
         cob = QComboBox(self)
-        player1 = "일번의 아이디"
-        player2 = "이번의 아이디"
-        player3 = "삼번의 아이디"
+        # 아이디를 서버에서 받아야겠다
+        player1 = "1번의 아이디"
+        player2 = "2번의 아이디"
+        player3 = "3번의 아이디"
         cob.addItem(player1)
         cob.addItem(player2)
         cob.addItem(player3)
-
-        deck0 = QLabel(playerDeck[0])
-        deck1 = QLabel(playerDeck[1])
-        deck2 = QLabel(playerDeck[2])
-        deck3 = QLabel(playerDeck[3])
+        cob.activated[str].connect(self.onActivated)
+        # print(self.playerDecks[self.playerNum].getCardorNone(0).getColor())
         layout2 = QHBoxLayout()
-        layout2.addWidget(deck0)
-        layout2.addWidget(deck1)
-        layout2.addWidget(deck2)
-        layout2.addWidget(deck3)
-        deck0.setMinimumHeight(160)
-        deck1.setMinimumHeight(160)
-        deck2.setMinimumHeight(160)
-        deck3.setMinimumHeight(160)
-        deck0.setMaximumWidth(140)
-        deck1.setMaximumWidth(140)
-        deck2.setMaximumWidth(140)
-        deck3.setMaximumWidth(140)
-        deck0.setAlignment(Qt.AlignCenter)
-        deck1.setAlignment(Qt.AlignCenter)
-        deck2.setAlignment(Qt.AlignCenter)
-        deck3.setAlignment(Qt.AlignCenter)
+        self.deck0 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(0)))
+        self.deck1 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(1)))
+        self.deck2 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(2)))
+        self.deck3 = QLabel(str(self.playerDecks[self.playerNum].getCardOrNone(3)))
+        layout2.addWidget(self.deck0)
+        layout2.addWidget(self.deck1)
+        layout2.addWidget(self.deck2)
+        layout2.addWidget(self.deck3)
+        self.deck0.setMinimumHeight(160)
+        self.deck1.setMinimumHeight(160)
+        self.deck2.setMinimumHeight(160)
+        self.deck3.setMinimumHeight(160)
+        self.deck0.setMaximumWidth(140)
+        self.deck1.setMaximumWidth(140)
+        self.deck2.setMaximumWidth(140)
+        self.deck3.setMaximumWidth(140)
+        self.deck0.setAlignment(Qt.AlignCenter)
+        self.deck1.setAlignment(Qt.AlignCenter)
+        self.deck2.setAlignment(Qt.AlignCenter)
+        self.deck3.setAlignment(Qt.AlignCenter)
 
-        SetCardDesign(playerDeck[0][0], deck0)
-        SetCardDesign(playerDeck[1][0], deck1)
-        SetCardDesign(playerDeck[2][0], deck2)
-        SetCardDesign(playerDeck[3][0], deck3)
-
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
         btnNumber1 = QPushButton("1")
         btnNumber2 = QPushButton("2")
         btnNumber3 = QPushButton("3")
@@ -502,3 +347,19 @@ class AppGiveHint(QWidget): #힌트주기 창
         cob.setMaximumSize(300, 30)
         cob.setMinimumSize(300, 30)
         self.setLayout(layout5)
+
+    def onActivated(self, text):
+        self.playerNum = int(text[0])
+        self.deck0.setText(str(self.playerDecks[self.playerNum].getCardOrNone(0)))
+        self.deck1.setText(str(self.playerDecks[self.playerNum].getCardOrNone(1)))
+        self.deck2.setText(str(self.playerDecks[self.playerNum].getCardOrNone(2)))
+        self.deck3.setText(str(self.playerDecks[self.playerNum].getCardOrNone(3)))
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
+        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    myWindow = HanabiGui()
+    myWindow.show()
+    app.exec_()
