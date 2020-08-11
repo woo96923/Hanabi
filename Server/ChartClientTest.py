@@ -36,7 +36,7 @@ class client():
         while True:
             data = input('>>>')
             s.send(data.encode())
-            s.close()
+        s.close()
 
     def gettingMsg(self,s):
 
@@ -44,19 +44,18 @@ class client():
         while True:
             data = s.recv(1024)
             print('\n',data.decode())
-            s.close()
-
-
-
+        s.close()
 
     def run(self):
-        send = threading.Thread(target=self.sendingMsg, args=(c,))
+
+        get = threading.Thread(target=self.gettingMsg, args=(self.s,))
+        get.daemon = True
+        get.start()
+
+        send = threading.Thread(target=self.sendingMsg, args=(self.s,))
         send.daemon = True
         send.start()
 
-        get = threading.Thread(target=self.gettingMsg, args=(c,))
-        get.daemon = True
-        get.start()
         #threading._start_new_thread(self.sendingMsg, ())
         #threading._start_new_thread(self.gettingMsg, ())
         print("program is ended")

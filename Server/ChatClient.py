@@ -51,11 +51,11 @@ class client():
 
     def run(self):
 
-        get = threading.Thread(target=self.gettingMsg, args=(c,))
+        get = threading.Thread(target=self.gettingMsg, args=(self.s,))
         get.daemon = True
         get.start()
 
-        send = threading.Thread(target=self.sendingMsg, args=(c,))
+        send = threading.Thread(target=self.sendingMsg, args=(self.s,))
         send.daemon = True
         send.start()
 

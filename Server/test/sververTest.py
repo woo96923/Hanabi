@@ -22,7 +22,7 @@ class Client(threading.Thread):
 
             print("Waiting msg from the client...")
             data = self.connection.recv(1024)
-            self.send_to_all_clients(data)
+            self.send_to_all_clients(''+data.decode())
 
     def send_to_all_clients(self, msg):
         for client in clients :
@@ -112,7 +112,7 @@ class Server:
         #b = threading.Thread(target= self.broadCast())
         #b.start()
 
-        while len(clients)!=1 :
+        while len(clients)!=2 :
             connection, (ip, port) = self.server.accept()
 
             c = Client(ip, port, connection)
