@@ -2,11 +2,13 @@
 import socket
 import sys
 import threading
+import time
 
-
+clients = []
 
 
 class Client(threading.Thread):
+    global clients
     def __init__(self, ip, port, connection):
         threading.Thread.__init__(self)
         self.connection = connection
@@ -15,12 +17,21 @@ class Client(threading.Thread):
 
         #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
 
-    def getMsg(self):
-        print("Waiting msg from the client...")
-        data = self.connection.recv(1024)
-        return data
+    def receive(self):
+        while True:
 
+            print("Waiting msg from the client...")
+            data = self.connection.recv(1024)
+            self.send_to_all_clients(data)
 
+    def send_to_all_clients(self, msg):
+        for client in clients :
+            print('sanding message to ', client.port)
+            client.connection.send(msg)
+
+    def run(self):
+        receiver = threading.Thread(target=self.receive)
+        receiver.start()
 
 
 
@@ -38,17 +49,15 @@ class Client(threading.Thread):
 
 
 class Server:
+    global clients
+
     def __init__(self, ip, port):
         self.ip = ip
         self.port = port
         self.address = (self.ip, self.port)
         self.server = None
-        self.clients = []
 
-    def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
-        for client in self.clients :
-            print('sanding message to ',client.port)
-            client.connection.send(msg.encode())
+
 
     def broadCast(self):
         data = input('> ')
@@ -56,7 +65,7 @@ class Server:
         self.send_to_all_clients(data)
         if data[:6] == '//turn':
             clientNumber = int(data[6]) - 1
-            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
+            self.requestMsgToClient(clients[clientNumber].ip,clients[clientNumber].port)
             #temp = threading.Thread(target=self.requestMsgToClient,args=(self.clients[clientNumber].ip,self.clients[clientNumber].port))
             #temp.start()
             #input('waiting...')
@@ -64,16 +73,19 @@ class Server:
             #일단 //turn오면 무조건 첫번째 접속자 한테 메세지 받기
             #스레드 안쓰니까 밀려서 스레드 사용해봄
 
-
+    def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
+        for client in clients :
+            print('sanding message to ',client.port)
+            client.connection.send(msg.encode())
 
     def send_to_client(self, ip, port, msg):
-        for client in self.clients :
+        for client in clients :
             if client.ip == ip and client.port == port :
                 client.connection.send(msg.encode())
 
     def requestMsgToClient(self, ip, port):
         print("Running requestMsgToClient...")
-        for client in self.clients :
+        for client in clients :
             if client.ip == ip and client.port == port :
                 print('Found selected client...',ip,port)
                 #client.connection.send('//turn'.encode())
@@ -100,19 +112,19 @@ class Server:
         #b = threading.Thread(target= self.broadCast())
         #b.start()
 
-        while len(self.clients)!=2 :
+        while len(clients)!=1 :
             connection, (ip, port) = self.server.accept()
 
             c = Client(ip, port, connection)
             c.start()
 
-            self.clients.append(c)
-            print(self.clients)
+            clients.append(c)
+            print(clients)
 
         print('All clients are connected!')
         while True:
-
-            self.broadCast()
+            time.sleep(0.5)
+            #self.broadCast()
 
             #if len(self.clients) == 4:
              #   self.send_to_all_clients('The game will begain')
