@@ -6,9 +6,10 @@ import threading
 GAMESTART = 1
 GAMEEND = 0
 GAME = 0
-MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
+MAXPLAYERNUMBER = 2 # 실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 됨.
 
 playerNumber = 0
+
 
 class Client(threading.Thread):
 
@@ -50,7 +51,7 @@ class Server:
         :return:
         '''
         global GAME, GAMESTART, GAMEEND
-        #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
+        # 게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
         GAME = GAMESTART
         print('Game start : //game\nSelect player : //turn + playernumber')
         data = input('> ')
@@ -68,7 +69,8 @@ class Server:
             clientNumber = int(data[6]) - 1
             self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
 
-    def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
+    def send_to_all_clients(self, msg):
+        # 제에에발 문자열 그대로 넣으세요 아님 바꾸던가
         '''
         :param msg: 모든 Clients에게 보낼 메세지
         '''
@@ -142,6 +144,7 @@ class Server:
             self.gamestart()
 
         self.server.close()
+
 
 if __name__ == '__main__':
     s = Server('', 6666) # '' 이렇게 IP부분에 빈칸으로 두면 모든 IP의 접속을 허용해준다고하는데 사실 정확하게는 모르겠어요ㅎ
