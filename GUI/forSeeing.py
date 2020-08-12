@@ -6,14 +6,15 @@ from PyQt5.QtCore import Qt, QRect
 from Game.GameManager import GameManager as GM
 from Game.GameManagerTest import initCards
 import copy
+
 FONTSIZE = 10
 
-#파일명만 바꿔서
+# 파일명만 바꿔서
 MainAlpha = uic.loadUiType("HanabiAlpha.ui")[0]
 GiveHintAlpha = uic.loadUiType("testUI02.ui")[0]
-#MainBoard
-#giveHint
-#etc..
+# MainBoard
+# giveHint
+# etc..
 
 SIDE_MARGIN = 1
 
@@ -59,24 +60,23 @@ class HanabiGui(QMainWindow, MainAlpha):
         self.btnThrow.clicked.connect(self.ShowThrowDeck)
         self.btnDrop.clicked.connect(self.ShowDropDeck)
         self.btnGiveHint.clicked.connect(self.ShowGiveHint)
-        #다음 내용은 불변.
+        # 다음 내용은 불변.
         # 창 아이콘
         self.setWindowIcon(QIcon('Hanabi.PNG'))
-        #창크기 조절, 출력
+        # 창크기 조절, 출력
         self.setFixedSize(1910, 990)
         self.setWindowTitle('Hanabi')
         self.show()
 
     def ShowThrowDeck(self):
         print("Opening a Throw window...")
-        # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다.
-        self.w = AppThrowDeck(self.clientIndex, self.gm)
+        self.w = AppThrowDeck()
         self.w.setGeometry(QRect(700, 400, 300, 200))
         self.w.show()
 
     def ShowDropDeck(self):
         print("Opening a Drop window...")
-        self.w = AppDropDeck(self.clientIndex, self.gm)
+        self.w = AppDropDeck()
         self.w.setGeometry(QRect(700, 400, 300, 200))
         self.w.show()
 
@@ -92,15 +92,14 @@ class HanabiGui(QMainWindow, MainAlpha):
         winGiveHint.show()
 
 
-        
 #    def show(self):
 #        super().show()
 
 class GiveHint(QDialog):
     def __init__(self):
         super().__init__()
-        #self.setupUi(GiveHintAlpha)
-        #self.setFixedSize(900, 500)
+        # self.setupUi(GiveHintAlpha)
+        # self.setFixedSize(900, 500)
         self.setWindowTitle('Give Hint')
         label = QLabel('나는 라벨', self)
         label.setAlignment(Qt.AlignCenter)
@@ -114,11 +113,9 @@ class GiveHint(QDialog):
         winGiveHint = GiveHint()
         winGiveHint.show()
 
-
-
-
     def showModal(self):
         return super().exec_()
+
 
 def SetCardDesign(color, deck):
     if color == "R":
@@ -130,10 +127,10 @@ def SetCardDesign(color, deck):
                            )
     elif color == "G":
         deck.setStyleSheet("background-color : " + "rgb(11, 222, 0);"
-                           "border-width: 2px;"
-                           "border-style : solid;"
-                           "border-radius: 20px;"
-                           "border-color : rgb(0, 0, 0)"
+                                                   "border-width: 2px;"
+                                                   "border-style : solid;"
+                                                   "border-radius: 20px;"
+                                                   "border-color : rgb(0, 0, 0)"
                            )
     elif color == "B":
         deck.setStyleSheet("background-color : rgb(49, 190, 255);"
@@ -165,30 +162,18 @@ def SetCardDesign(color, deck):
                            )
 
 
-class AppThrowDeck(QWidget): #카드 버리기 창
-    def __init__(self, clientIndex, gm):
+class AppThrowDeck(QWidget):  # 카드 버리기 창
+    def __init__(self):
         QWidget.__init__(self)
-        self.gm = gm
-
-        self.playerDeck = self.gm.playerDecks[clientIndex]
-        self.buttonGroup = QButtonGroup()
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle('버리기')
-        deck0 = QPushButton("??")
-        deck1 = QPushButton("??")
-        deck2 = QPushButton("??")
-        deck3 = QPushButton("??")
+        deck0 = QPushButton("왜안돼?")
+        deck1 = QPushButton("왜안돼?")
+        deck2 = QPushButton("왜안돼?")
+        deck3 = QPushButton("왜안돼?")
 
-        self.buttonGroup.buttonClicked[int].connect(self.discardCard)
-        self.buttonGroup.addButton(deck0, 0)
-        self.buttonGroup.addButton(deck1, 1)
-        self.buttonGroup.addButton(deck2, 2)
-        self.buttonGroup.addButton(deck3, 3)
-
-        for button in self.buttonGroup.buttons():
-            SetCardDesign("mine", button)
         layout1 = QHBoxLayout()
         layout1.addWidget(deck0)
         layout1.addWidget(deck1)
@@ -200,71 +185,89 @@ class AppThrowDeck(QWidget): #카드 버리기 창
         deck3.setMaximumHeight(400)
         self.setLayout(layout1)
 
-    def discardCard(self, id):
-        '''
-        :param id: 몇 번째 카드를 버릴 건지
-        :return: 버릴 카드 정보 반환
-        '''
-        for button in self.buttonGroup.buttons():
-            if button is self.buttonGroup.button(id):
-                print("{}번 플레이어가 {}번째 카드를 버렸습니다.".format(self.gm.clientIndex, id + 1))
-        self.gm.nextTurn()
+
+playerDeck = ["R1", "R2", "R3", "R4"]
 
 
-#카드 내기 창
+# 카드 내기 창
 class AppDropDeck(QWidget):
-    def __init__(self, clientIndex, gm):
+    def __init__(self):
         QWidget.__init__(self)
-        self.gm = gm
-        self.playerNum = clientIndex
-        self.deckGroup = QButtonGroup()
-        self.buttonGroup = QButtonGroup()
-        self.initUI()
+        '''
+        rbtn1~4 : 체크된 상태에서 내기 버튼 누르면 체크된 카드가 내진다.
+        list_rbtn : rbtn을 관리하기 위한 리스트
+        '''
+        self.rbtn1 = QRadioButton()
+        self.rbtn2 = QRadioButton()
+        self.rbtn3 = QRadioButton()
+        self.rbtn4 = QRadioButton()
+        self.btnfin = QPushButton("선택")
+        self.btnfin.clicked.connect(self.finBtn)
 
-    def initUI(self):
-        self.setWindowTitle("카드 내기")
-        deck0 = QPushButton("??")
-        deck1 = QPushButton("??")
-        deck2 = QPushButton("??")
-        deck3 = QPushButton("??")
+    def paintEvent(self, e):
+        self.setWindowTitle('내기')
+        deck0 = QLabel()
+        deck1 = QLabel()
+        deck2 = QLabel()
+        deck3 = QLabel()
+        deck0.setAlignment(Qt.AlignCenter)
+        deck1.setAlignment(Qt.AlignCenter)
+        deck2.setAlignment(Qt.AlignCenter)
+        deck3.setAlignment(Qt.AlignCenter)
+        space = QLabel(" ")
 
-        self.buttonGroup.buttonClicked[int].connect(self.playCard)
-        self.buttonGroup.addButton(deck0, 0)
-        self.buttonGroup.addButton(deck1, 1)
-        self.buttonGroup.addButton(deck2, 2)
-        self.buttonGroup.addButton(deck3, 3)
+        layout0 = QVBoxLayout()
 
+        layout0.setAlignment(Qt.AlignCenter)
+        layoutrbtn = QHBoxLayout()
+        layoutrbtn.addWidget(self.rbtn1)
+        layoutrbtn.addWidget(self.rbtn2)
+        layoutrbtn.addWidget(self.rbtn3)
+        layoutrbtn.addWidget(self.rbtn4)
+
+        # 카드배치
         layout1 = QHBoxLayout()
         layout1.addWidget(deck0)
         layout1.addWidget(deck1)
         layout1.addWidget(deck2)
         layout1.addWidget(deck3)
+        # 카드 크기
+        deck0.setMaximumSize(140, 160)
+        deck1.setMaximumSize(140, 160)
+        deck2.setMaximumSize(140, 160)
+        deck3.setMaximumSize(140, 160)
+        deck0.setMinimumSize(140, 160)
+        deck1.setMinimumSize(140, 160)
+        deck2.setMinimumSize(140, 160)
+        deck3.setMinimumSize(140, 160)
+        self.btnfin.setMaximumWidth(140)
 
-        deck0.setMaximumHeight(400)
-        deck1.setMaximumHeight(400)
-        deck2.setMaximumHeight(400)
-        deck3.setMaximumHeight(400)
-        self.setLayout(layout1)
+        # 위젯 배치
+        layoutSpace = QHBoxLayout()
+        layoutSpace.addWidget(space)
+        layoutSpace.addWidget(self.btnfin)
+        layoutSpace.addWidget(space)
+        layout0.addLayout(layout1)
+        layout0.addLayout(layoutrbtn)
+        layout0.addWidget(space)
+        layout0.addLayout(layoutSpace)
 
+        # 카드 디자인
         SetCardDesign("mine", deck0)
         SetCardDesign("mine", deck1)
         SetCardDesign("mine", deck2)
         SetCardDesign("mine", deck3)
 
-        self.setLayout(layout1)
+        self.setLayout(layout0)
 
-    def playCard(self, id):
-        '''
-                :param id: 몇 번째 카드를 버릴 건지
-                :return: 버릴 카드 정보 반환
-                '''
-        for button in self.buttonGroup.buttons():
-            if button is self.buttonGroup.button(id):
-                print("{}번 플레이어가 {}번째 카드를 냈습니다.".format(self.playerNum, id + 1))
+    def finBtn(self):
+        list_rbtn = [self.rbtn0, self.rbtn1, self.rbtn2, self.rbtn3]
+        for i, rbtn in enumerate(list_rbtn):
+            if rbtn.isChecked():
+                print(i)
 
 
-# 힌트주기 창
-class AppGiveHint(QWidget):
+class AppGiveHint(QWidget):  # 힌트주기 창
     def __init__(self, playerDecks, gm):
         QWidget.__init__(self)
         self.playerDecks = playerDecks
