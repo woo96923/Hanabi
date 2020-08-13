@@ -132,14 +132,16 @@ class GameManager:
             if card.getNumber() - 1 == len(playedCards):        # 해당색의 카드를 카드를 줄지어 낼 수 있는 경우
                 playedCards.append(card)
                 print("Play 성공!")       # DEBUG
+                return 1
             else:
                 discardedCards = self.getDiscardedCards(card.getColor())
                 discardedCards.append(card)
                 print("Play 실패! 라이프 토큰이 하나 감소합니다.")  # DEBUG
                 self.decreaseLifeToken()
+                return 0
 
             playerDeck.useCard(cardIndex)
-
+            # self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor() # Error가 나는 것 같은데 문장의 목적이 무엇인지??
             if self.isGameEnd():
                 return
 

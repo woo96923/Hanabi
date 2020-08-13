@@ -5,7 +5,8 @@ from PyQt5.QtGui import QImage, QPalette, QBrush, QIcon
 from PyQt5.QtCore import Qt, QRect
 from Game.GameManager import GameManager as GM
 from Game.GameManagerTest import initCards
-
+from Game.GameElements import Action as Action
+from Game.GameElements import Hint as Hint
 
 FONTSIZE = 10
 
@@ -42,20 +43,40 @@ class HanabiGui(QMainWindow, MainAlpha):
         self.gm = GM(initCards(5), self.clientIndex, self.beginnerIndex)
         self.gm.distributeCards()
         self.btnGiveHint.clicked.connect(self.clickedGiveHint)
+        # 들고 있는 카드의 list
         self.deckList = [[self.player0Deck0, self.player0Deck1, self.player0Deck2, self.player0Deck3],
                          [self.player1Deck0, self.player1Deck1, self.player1Deck2, self.player1Deck3],
                          [self.player2Deck0, self.player2Deck1, self.player2Deck2, self.player2Deck3],
                          [self.player3Deck0, self.player3Deck1, self.player3Deck2, self.player3Deck3]]
+        # 낸 카드의 list
+        self.drpoedCardList = [[self.mainR1, self.mainR2, self.mainR3, self.mainR4, self.mainR5],
+                               [self.mainG1, self.mainG2, self.mainG3, self.mainG4, self.mainG5],
+                               [self.mainB1, self.mainB2, self.mainB3, self.mainB4, self.mainB5],
+                               [self.mainY1, self.mainY2, self.mainY3, self.mainY4, self.mainY5],
+                               [self.mainW1, self.mainW2, self.mainW3, self.mainW4, self.mainW5]]
+        # 버린 카드의 list
+        self.thrownCardList = [[self.throwR1, self.throwR2, self.throwR3, self.throwR4, self.throwR5],
+                               [self.throwG1, self.throwG2, self.throwG3, self.throwG4, self.throwG5],
+                               [self.throwB1, self.throwB2, self.throwB3, self.throwB4, self.throwB5],
+                               [self.throwY1, self.throwY2, self.throwY3, self.throwY4, self.throwY5],
+                               [self.throwW1, self.throwW2, self.throwW3, self.throwW4, self.throwW5]]
+
+        for cards in self.drpoedCardList:
+            for card in cards:
+                card.setText("0")
+        print(type(self.player3Deck2))
         for deck in self.gm.playerDecks:
             print(deck)
         for i, deck in enumerate(self.deckList):
             # clinet 위치를 어떻게 잡느냐가 관건..
+            # 아래 주석은 자신의 카드를 가리기 위한 코드. test 시에는 무시하고 진행한다.
+            '''
             if i == self.clientIndex:
                 for j in range(4):
                     SetCardDesign("mine", deck[j])
-            else:
-                for j in range(4):
-                    SetCardDesign(self.gm.playerDecks[i].getCardOrNone(j).getColor(), deck[j])
+            '''
+            for j in range(4):
+                SetCardDesign(self.gm.playerDecks[i].getCardOrNone(j).getColor(), deck[j])
 
         self.btnThrow.clicked.connect(self.ShowThrowDeck)
         self.btnDrop.clicked.connect(self.ShowDropDeck)
@@ -73,7 +94,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         if self.isTurn:
             print("Opening a Throw window...")
             # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다.
-            self.w = AppThrowDeck(self.clientIndex, self.gm)
+            self.w = AppThrowDeck(self.gm.currentPlayerIndex, self.gm, self.deckList)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
 
@@ -81,7 +102,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Drop window...")
-            self.w = AppDropDeck(self.clientIndex, self.gm)
+            self.w = AppDropDeck(self.gm.currentPlayerIndex, self.gm, self.deckList, self.drpoedCardList, self.thrownCardList)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
 
@@ -89,8 +110,8 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 내 차례라면 창을 연다.
             if self.isTurn:
                 print("Opening a GiveHint window...")
-                # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다.
-                self.w = AppGiveHint(self.clientIndex, self.gm)
+                # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다 .
+                self.w = AppGiveHint(self.gm.currentPlayerIndex, self.gm, self.deckList)
                 self.w.setGeometry(QRect(700, 400, 300, 200))
                 self.w.show()
 
@@ -104,8 +125,8 @@ class HanabiGui(QMainWindow, MainAlpha):
 class GiveHint(QDialog):
     def __init__(self):
         super().__init__()
-        #self.setupUi(GiveHintAlpha)
-        #self.setFixedSize(900, 500)
+        # self.setupUi(GiveHintAlpha)
+        # self.setFixedSize(900, 500)
         self.setWindowTitle('Give Hint')
         label = QLabel('나는 라벨', self)
         label.setAlignment(Qt.AlignCenter)
@@ -124,6 +145,7 @@ class GiveHint(QDialog):
 
     def showModal(self):
         return super().exec_()
+
 
 def SetCardDesign(color, deck):
     if color == "R":
@@ -171,12 +193,12 @@ def SetCardDesign(color, deck):
 
 
 class AppThrowDeck(QWidget): #카드 버리기 창
-    def __init__(self, clientIndex, gm):
+    def __init__(self, clientIndex, gm, deckList):
         QWidget.__init__(self)
         self.gm = gm
-
         self.playerDeck = self.gm.playerDecks[clientIndex]
         self.buttonGroup = QButtonGroup()
+        self.deckList = deckList
         self.initUI()
 
     def initUI(self):
@@ -212,19 +234,28 @@ class AppThrowDeck(QWidget): #카드 버리기 창
         '''
         for button in self.buttonGroup.buttons():
             if button is self.buttonGroup.button(id):
-                print("{}번 플레이어가 {}번째 카드를 버렸습니다.".format(self.gm.clientIndex, id + 1))
-                self.gm.clientIndex += 1
-        self.gm.nextTurn()
+                # print("{}번 플레이어가 {}번째 카드를 버렸습니다.".format(self.gm.currentPlayerIndex, id + 1)) # for debugging
+                self.gm.doAction(Action(2, id))
+                self.deckList[self.gm.currentPlayerIndex][id].setText(
+                    str(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)))
+                SetCardDesign(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor(),
+                              self.deckList[self.gm.currentPlayerIndex][id])
+                self.gm.nextTurn()
+                self.close()
 
 
 #카드 내기 창
 class AppDropDeck(QWidget):
-    def __init__(self, clientIndex, gm):
+    def __init__(self, clientIndex, gm, deckList, droppedCardList, thrownCardList):
         QWidget.__init__(self)
         self.gm = gm
+        self.droppedCardList = droppedCardList
+        self.thrownCardList = thrownCardList
+        self.colorList = {"R" : 0, "G" : 1, "B" : 2, "Y" : 3, "W" : 4}
         self.playerNum = clientIndex
         self.deckGroup = QButtonGroup()
         self.buttonGroup = QButtonGroup()
+        self.deckList = deckList
         self.initUI()
 
     def initUI(self):
@@ -256,17 +287,38 @@ class AppDropDeck(QWidget):
         SetCardDesign("mine", deck1)
         SetCardDesign("mine", deck2)
         SetCardDesign("mine", deck3)
-
         self.setLayout(layout1)
 
     def playCard(self, id):
         '''
-                :param id: 몇 번째 카드를 버릴 건지
-                :return: 버릴 카드 정보 반환
+                :param id: 몇 번째 카드를 낼 건지
+                :return: 낼 카드 정보 반환
                 '''
         for button in self.buttonGroup.buttons():
             if button is self.buttonGroup.button(id):
-                print("{}번 플레이어가 {}번째 카드를 냈습니다.".format(self.playerNum, id + 1))
+                print("{}번 플레이어가 {}번째 카드를 냈습니다.".format(self.gm.currentPlayerIndex, id + 1))
+                '''
+                카드 배치 성공 여부에 따라 행동이 달라짐.
+                성공했다면 playedCardList를, 실패했다면 discardedCardList 를 조작해주어야 함.
+                우선 doAction 함수의 카드를 내는 부분에만 early return 을 넣어주어 성공 여부를 구분했음.
+                1) 이를 개선할 방법이 있는지 알아봐야 함.
+                2) 버려진 카드와 배치된 카드를 받아올 가장 효율적인 방법을 알아야 함.
+                2-1) 현재까지 파악한 바로는 카드 색으로만 list 를 다루는 걸로 확인되는데, 숫자까지 구분해 digit 개념으로 리스트를 
+                    따로 만들거나 ui 표시를 위한 리스트를 따로 만드는 것이 좋아보임.
+                '''
+                flag = self.gm.doAction(Action(1, id))
+                # 카드 놓는 데에 성공했으면
+                color = self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor()
+                number = self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getNumber()
+
+
+                self.deckList[self.gm.currentPlayerIndex][id].setText(
+                    str(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)))
+                SetCardDesign(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor(),
+                              self.deckList[self.gm.currentPlayerIndex][id])
+
+                self.gm.nextTurn()
+                self.close()
 
 
 # 힌트주기 창
@@ -275,7 +327,7 @@ class AppGiveHint(QWidget):
         QWidget.__init__(self)
         self.clientIndex = clientIndex
         self.gm = gm
-        self.playerNum = 0
+        self.playerNum = (clientIndex + 1) % 4
         self.buttonGroup = QButtonGroup()
         self.initUI()
 
@@ -373,25 +425,38 @@ class AppGiveHint(QWidget):
 
     def onActivated(self, text):
         self.playerNum = int(text[0])
-        self.deck0.setText(str(self.playerDecks[self.playerNum].getCardOrNone(0)))
-        self.deck1.setText(str(self.playerDecks[self.playerNum].getCardOrNone(1)))
-        self.deck2.setText(str(self.playerDecks[self.playerNum].getCardOrNone(2)))
-        self.deck3.setText(str(self.playerDecks[self.playerNum].getCardOrNone(3)))
-        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
-        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
-        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
-        SetCardDesign(self.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
+
+        self.deck0.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(0)))
+        self.deck1.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(1)))
+        self.deck2.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(2)))
+        self.deck3.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(3)))
+        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
+        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
+        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
+        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
+
 
     def giveHint(self, id):
         '''
         :return: 힌트에 대한 정보를 줄 것. 플레이어 번호 + 힌트를 str로 넘긴다.
         '''
+        colorDict = {5 : "R", 6 : "G", 7 : "B", 8 : "W", 9: "Y"}
         for button in self.buttonGroup.buttons():
             if button is self.buttonGroup.button(id):
-                print("{}번째 플레이어에게 {}로 힌트를 주었습니다.".format(self.playerNum, button.text()))
-                self.clientIndex = (self.clientIndex + 1) % 4
-                self.close()
+                # print("{}번째 플레이어에게 {}로 힌트를 주었습니다.".format(self.playerNum, button.text())) # for debugging
+                # 아직 없는 카드에 대한 힌트가 갱신돼있지 않음. pull 은 다 한 것 같은데??
+                # 숫자 버튼이면?
+                if 0 <= id <= 4:
 
+                    self.gm.doAction(Action(3, Hint(id + 1), self.playerNum))
+                    self.gm.clientIndex = (self.clientIndex + 1) % 4
+                    self.gm.nextTurn()
+                    self.close()
+                if 5 <= id <= 9:
+                    self.gm.doAction(Action(3, Hint(colorDict[id]), self.playerNum))
+                    self.gm.clientIndex = (self.clientIndex + 1) % 4
+                    self.gm.nextTurn()
+                    self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
