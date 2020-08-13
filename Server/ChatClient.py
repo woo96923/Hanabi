@@ -3,6 +3,7 @@ import threading
 import sys
 import types
 import time
+import Server.Commends
 
 class client():
     def __init__(self,IP,port):
@@ -19,9 +20,12 @@ class client():
             host = socket.gethostname()
             self.s.connect((self.IP, self.port))
             print('connected with Server')
-            self.recevePN = self.s.recv(self.size)
-            self.playerNumber = self.recevePN.decode()[4]
-            print('Your player number is ', self.playerNumber)
+            recevePN = self.s.recv(self.size)
+            if recevePN.decode()[0:2] == Server.Commends.ITISPLAYERNUMBER:
+                self.playerNumber = recevePN.decode()[2]
+                print('Your player number is ', self.playerNumber)
+            else:
+                print('Errer in receiving PN')
 
 
         except socket.error:
@@ -43,10 +47,15 @@ class client():
         print("opend gettingMsg Thread")
         while True:
             data = s.recv(1024)
-            print('\n',data.decode())
+            if data.decode()[0:2] == Server.Commends.COMMENDKEY:#서버로 부터 받은게 커맨드라면
+                return data
+            elif data.decode()[0:2] == Server.Commends.ITISCHAT:#채팅이라면
+                print('\n','Player ',data.decode[2],' : ',data.decode()[3:])
+                return Server.Commends.ITISCHAT
         s.close()
 
-
+    def myPlayerNumberis(self):
+        return self.playerNumber
 
 
     def run(self):

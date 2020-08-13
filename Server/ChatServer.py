@@ -2,11 +2,10 @@
 import socket
 import sys
 import threading
+import Server.Commends
 
-GAMESTART = 1
-GAMEEND = 0
-GAME = 0
-MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
+
+
 
 playerNumber = 0
 clients = []
@@ -29,7 +28,8 @@ class Client(threading.Thread):
         #플레이어 넘버를 통신을 통해 지정해줌으로써 관리를 편하게 하고 보기도 편하게함
         #들어오는 순서대로 1, 2, 3, 4임ㅎ
         #누구만대로냐고? 내맘ㅎ
-        self.connection.sendall(('//PN'+str(playerNumber)).encode())
+        self.connection.sendall((Server.Commends.ITISPLAYERNUMBER+str(playerNumber)).encode())
+        self.playerNumber = playerNumber
         playerNumber += 1
 
     def getMsg(self): #Client로 부터 입력을 받아오라고하는 메소드. 입력 받을때까지 서버는 스탑
@@ -44,9 +44,10 @@ class Client(threading.Thread):
             data = self.connection.recv(1024)
             self.send_to_all_clients(data)
 
-    def send_to_all_clients(self, msg):
+    def send_to_all_clients(self, msg):#채팅 커맨드와 누구로부터 왔는지 메세지 순서대로 데이터 전송
+        msg = Server.Commends.ITISCHAT + str(self.playerNumber) + msg
         for client in clients :
-            print('sanding message to ', client.port)
+            print(self.playerNumber, 'sanding message to ', client.port)#누구한테 보내는지 확인용
             client.connection.send(msg)
 
     def run(self):
@@ -137,13 +138,12 @@ class Server:
             sys.exit(1)
 
     def run(self):
-        global MAXPLAYERNUMBER
         self.open_socket()
-        self.server.listen(MAXPLAYERNUMBER)
+        self.server.listen(5)
         #b = threading.Thread(target= self.broadCast())
         #b.start()
 
-        while len(self.clients)!=MAXPLAYERNUMBER :
+        while len(self.clients)!=Server.Commends.MAXPLAYERNUMBER:#접속 대기단계
 
             connection, (ip, port) = self.server.accept()
 
@@ -155,7 +155,7 @@ class Server:
 
         print('All clients are connected!')
 
-        while True:
+        while True:#접속 완료 후 단계
 
             self.gamestart()
 

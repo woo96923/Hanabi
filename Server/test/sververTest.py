@@ -3,12 +3,13 @@ import socket
 import sys
 import threading
 import time
+import Server.Commends
 
 clients = []
-
+playerNumber = 0
 
 class Client(threading.Thread):
-    global clients
+    global clients, playerNumber
     def __init__(self, ip, port, connection):
         threading.Thread.__init__(self)
         self.connection = connection
@@ -17,12 +18,17 @@ class Client(threading.Thread):
 
         #self.send_to_all_clients('player ', port,' is connected.')##추후에 ip나 player이름으로 교체 예정
 
+
+        self.connection.sendall(('//PN'+str(playerNumber)).encode())
+        self.playerNumber = playerNumber
+        playerNumber += 1
     def receive(self):
         while True:
 
             print("Waiting msg from the client...")
             data = self.connection.recv(1024)
-            self.send_to_all_clients(''+data.decode())
+            data = Server.Commends.ITISCHAT + self.playerNumber + data
+            self.send_to_all_clients(data.decode())
 
     def send_to_all_clients(self, msg):
         for client in clients :
@@ -33,19 +39,6 @@ class Client(threading.Thread):
         receiver = threading.Thread(target=self.receive)
         receiver.start()
 
-
-
-"""
-    def run(self):
-        while True:
-            data = self.connection.recv(1024)
-            if data :
-
-                self.connection.sendall(data)
-            else :
-                break
-        self.connection.close()
-        """
 
 
 class Server:
