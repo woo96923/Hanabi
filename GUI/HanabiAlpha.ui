@@ -627,7 +627,7 @@ player 1이 player 2에게 힌트를 줌
           <item>
            <layout class="QGridLayout" name="gridLayout_10">
             <item row="4" column="2">
-             <widget class="QLabel" name="label_12">
+             <widget class="QLabel" name="throwY2">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -707,7 +707,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="5" column="5">
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="throwW5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -723,7 +723,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="2" column="5">
-             <widget class="QLabel" name="label_23">
+             <widget class="QLabel" name="throwG5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -739,7 +739,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="1" column="4">
-             <widget class="QLabel" name="label_7">
+             <widget class="QLabel" name="throwR4">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -809,7 +809,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="1" column="5">
-             <widget class="QLabel" name="label_24">
+             <widget class="QLabel" name="throwR5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -841,7 +841,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="5" column="2">
-             <widget class="QLabel" name="label_30">
+             <widget class="QLabel" name="throwW2">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -857,7 +857,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="label_29">
+             <widget class="QLabel" name="throwW1">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -905,7 +905,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="5" column="3">
-             <widget class="QLabel" name="label_31">
+             <widget class="QLabel" name="throwW3">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -921,7 +921,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="4" column="3">
-             <widget class="QLabel" name="label_32">
+             <widget class="QLabel" name="throwY3">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -937,7 +937,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="label_28">
+             <widget class="QLabel" name="throwY1">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -953,7 +953,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="3" column="5">
-             <widget class="QLabel" name="label_34">
+             <widget class="QLabel" name="throwB5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -969,7 +969,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="4" column="4">
-             <widget class="QLabel" name="label_35">
+             <widget class="QLabel" name="throwY4">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -985,7 +985,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="4" column="5">
-             <widget class="QLabel" name="label_36">
+             <widget class="QLabel" name="throwY5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1017,7 +1017,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="3" column="4">
-             <widget class="QLabel" name="label_33">
+             <widget class="QLabel" name="throwB4">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1161,7 +1161,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="2" column="4">
-             <widget class="QLabel" name="label_22">
+             <widget class="QLabel" name="throwG4">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1177,7 +1177,7 @@ player 1이 player 2에게 힌트를 줌
              </widget>
             </item>
             <item row="5" column="4">
-             <widget class="QLabel" name="label_37">
+             <widget class="QLabel" name="throwW4">
               <property name="maximumSize">
                <size>
                 <width>70</width>
