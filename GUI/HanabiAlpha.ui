@@ -1724,7 +1724,7 @@ border-color : rgb(0, 0, 0);
                <string>힌트 주기</string>
               </property>
               <property name="checkable">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -1827,7 +1827,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string> </string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1855,7 +1855,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string> </string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1883,7 +1883,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string> </string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1911,7 +1911,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string> </string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -2074,7 +2074,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string> </string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
