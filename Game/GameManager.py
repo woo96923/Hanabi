@@ -129,7 +129,7 @@ class GameManager:
             playedCards = self.getPlayedCards(card.getColor())
 
             print("%d번 플레이어가 %s 카드를 냈습니다." % (self.currentPlayerIndex, card))       # DEBUG
-            if card.getNumber() - 1 == len(playedCards):        # 해당색의 카드를 카드를 줄지어 낼 수 있는 경우
+            if card.getNumber() - 1 == len(playedCards):       # 해당색의 카드를 카드를 줄지어 낼 수 있는 경우
                 playedCards.append(card)
                 print("Play 성공!")       # DEBUG
                 return 1
@@ -141,13 +141,13 @@ class GameManager:
                 return 0
 
             playerDeck.useCard(cardIndex)
-            # self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor() # Error가 나는 것 같은데 문장의 목적이 무엇인지??
             if self.isGameEnd():
                 return
 
             if not self.isCardsEmpty():
                 self.giveOneCard(self.currentPlayerIndex)
                 print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)       # DEBUG
+
             else:
                 if self.lastPlayerIndex < 0:
                     self.lastPlayerIndex = self.currentPlayerIndex
@@ -187,31 +187,33 @@ class GameManager:
                         correspondedIndexes.append(i)
 
             self.decreaseHintToken()
-            self.deliverHintToUI(action.getHint(), targetIndex, correspondedIndexes)
+            return(self.deliverHintToUI(action.getHint(), targetIndex, correspondedIndexes))
 
     def deliverHintToUI(self, hint: Hint, targetIndex: int, cardIndexes: list):
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        assert len(cardIndexes) is not 0, "invalid hint"
-
-        if hint.isNumber():
-            hintString = "숫자 %d" % hint.info
+        # 힌트로 받은 카드가 없으면
+        if len(cardIndexes) == 0:
+            pass
         else:
-            if hint.info is "R":
-                hintString = "빨간색"
-            elif hint.info is "G":
-                hintString = "초록색"
-            elif hint.info is "B":
-                hintString = "파란색"
-            elif hint.info is "W":
-                hintString = "하얀색"
+            if hint.isNumber():
+                hintString = "숫자 %d" % hint.info
             else:
-                hintString = "노란색"
+                if hint.info is "R":
+                    hintString = "빨간색"
+                elif hint.info is "G":
+                    hintString = "초록색"
+                elif hint.info is "B":
+                    hintString = "파란색"
+                elif hint.info is "W":
+                    hintString = "하얀색"
+                else:
+                    hintString = "노란색"
 
-        print("%d번 플레이어의 힌트: %d번 플레이어의 %s번째 카드는 %s 입니다."
-              % (self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
-        print("힌트 토큰이 하나 감소합니다.")
+            notice = ("{}번 플레이어의 힌트: \n {}번 플레이어의 {}번째 카드는 {} 입니다.".format(self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+
+            return notice
 
     def calculateScore(self):
         # 점수 계산
