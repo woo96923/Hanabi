@@ -24,18 +24,18 @@ class GameManager:
         self.__whitePlayedCards = []
         self.__yellowPlayedCards = []
 
-        # self.discardedCards = [COLOR, 1_cnt, 2_cnt, 3_cnt, 4_cnt, 5_cnt]
+        # self.discardedCardCounter = [COLOR, 1_cnt, 2_cnt, 3_cnt, 4_cnt, 5_cnt]
         self.__redDiscardedCardCounter = ['R', 0, 0, 0, 0, 0]
         self.__greenDiscardedCardCounter = ['G', 0, 0, 0, 0, 0]
         self.__blueDiscardedCardCounter = ['B', 0, 0, 0, 0, 0]
         self.__whiteDiscardedCardCounter = ['W', 0, 0, 0, 0, 0]
         self.__yellowDiscardedCardCounter = ['Y', 0, 0, 0, 0, 0]
 
-        self.__discardedCardCounterList = [ self.__redDiscardedCardCounter,
-                                        self.__greenDiscardedCardCounter,
-                                        self.__blueDiscardedCardCounter,
-                                        self.__whiteDiscardedCardCounter,
-                                        self.__yellowDiscardedCardCounter ]
+        self.__discardedCardCounterList = [self.__redDiscardedCardCounter,
+                                           self.__greenDiscardedCardCounter,
+                                           self.__blueDiscardedCardCounter,
+                                           self.__whiteDiscardedCardCounter,
+                                           self.__yellowDiscardedCardCounter]
 
     def isCardsEmpty(self):
         # 카드더미가 비었는지 확인하는 함수
@@ -51,7 +51,7 @@ class GameManager:
         """
         assert not self.isCardsEmpty(), "cannot give card when have no cards"
         card = self.cards[0]
-        del self.cards[0]       # pop()을 쓰면 한줄로 줄일 수도 있다.
+        del self.cards[0]  # pop()을 쓰면 한줄로 줄일 수도 있다.
         self.playerDecks[playerIndex].addCard(card)
 
     def distributeCards(self):
@@ -126,107 +126,112 @@ class GameManager:
 
     def doAction(self, action: Action):
         """
-        Action을 수행하는 함수
+        (구) Action 을 수행하는 함수
+        기존 CUI 테스트 코드를 유지하기 위해 남겨둔 상태. 현재는 각 Action 별로 함수가 작성되어 있다.
         :param action: 수행할 동작
+        :return: 각 Action 을 처리하는 함수의 return 값을 반환한다. 즉 actionType을 점검하지 않으면 어떤 return 값을 가지는지
+                 확신할 수 없으니 주의할 것. 반환 값이 있을 수도 있고 없을 수도 있다.
         """
 
-        if action.getActionType() == 1:         # 카드내기 (Play)
-            playerDeck = self.playerDecks[self.currentPlayerIndex]
-            cardIndex = action.getCardIndex()
+        if action.getActionType() == 1:  # 카드내기 (Play)
+            return self.doActionPlay(action)
+        elif action.getActionType() == 2:  # 버리기   (Discard)
+            self.doActionDiscard(action)
+        elif action.getActionType() == 3:  # 힌트주기
+            return self.doActionHint(action)
 
-            card = playerDeck.getCardOrNone(cardIndex)
-            playedCards = self.getPlayedCards(card.getColor())
+    def doActionPlay(self, action: Action):
+        """
+        카드내기 Action 을 수행하는 함수
+        :param action: 수행할 action. type 은 무조건 1이어야 한다.
+        :return: play 에 성공했는지 여부를 반환한다. 카드를 내는데 성공하면 True, 실패하면 False
+        """
+        assert action.getActionType() == 1, "<play> must be action type 1"
 
-            print("%d번 플레이어가 %s 카드를 냈습니다." % (self.currentPlayerIndex, card))       # DEBUG
-            if card.getNumber() - 1 == len(playedCards):       # 해당색의 카드를 카드를 줄지어 낼 수 있는 경우
-                playedCards.append(card)
-                print("Play 성공!")       # DEBUG
-                return 1
-            else:
-                discardedCards = self.getDiscardedCardCounter(card.getColor())
-                discardedCards[card.getNumber()] += 1;
-                print("Play 실패! 라이프 토큰이 하나 감소합니다.")  # DEBUG
-                self.decreaseLifeToken()
-                return 0
+        playerDeck = self.playerDecks[self.currentPlayerIndex]
+        cardIndex = action.getCardIndex()
 
-            playerDeck.useCard(cardIndex)
-            if self.isGameEnd():
-                return
+        card = playerDeck.getCardOrNone(cardIndex)
+        playedCards = self.getPlayedCards(card.getColor())
 
-            if not self.isCardsEmpty():
-                self.giveOneCard(self.currentPlayerIndex)
-                print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)       # DEBUG
-
-            else:
-                if self.lastPlayerIndex < 0:
-                    self.lastPlayerIndex = self.currentPlayerIndex
-                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))      # DEBUG
-
-        elif action.getActionType() == 2:         # 버리기   (Discard)
-            playerDeck = self.playerDecks[self.currentPlayerIndex]
-            cardIndex = action.getCardIndex()
-
-            card = playerDeck.getCardOrNone(cardIndex)
-            discardedCards = self.getDiscardedCardCounter(card.getColor())
-
-            discardedCards[card.getNumber()] += 1;
-            self.increaseHintToken()
-
-            print("%d번 플레이어가 %s 카드를 버렸습니다." % (self.currentPlayerIndex, card))          # DEBUG
-            print("힌트 토큰이 하나 증가합니다.(8 이상이면 증가하지 않음)")           # DEBUG
-
-            playerDeck.useCard(cardIndex)
-            if not self.isCardsEmpty():
-                self.giveOneCard(self.currentPlayerIndex)
-                print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)     # DEBUG
-            else:
-                if self.lastPlayerIndex < 0:
-                    self.lastPlayerIndex = self.currentPlayerIndex
-                    print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))      # DEBUG
-
-        elif action.getActionType() == 3:         # 힌트주기
-            targetIndex = action.getTargetIndex()
-            assert targetIndex is not self.currentPlayerIndex
-            correspondedIndexes = []
-
-            for i in range(4):
-                card = self.playerDecks[targetIndex].getCardOrNone(i)
-                if card is not None:
-                    if card.isCorrespondedHint(action.getHint()):
-                        correspondedIndexes.append(i)
-
-            self.decreaseHintToken()
-            return(self.deliverHintToUI(action.getHint(), targetIndex, correspondedIndexes))
-
-    def deliverHintToUI(self, hint: Hint, targetIndex: int, cardIndexes: list):
-        # 힌트를 받은 내용을 UI에게 넘겨주는 함수
-        # 구체적인 구현 내용은 아직 미정.
-
-        # 힌트로 받은 카드가 없으면
-        if len(cardIndexes) == 0:
-            pass
+        print("%d번 플레이어가 %s 카드를 냈습니다." % (self.currentPlayerIndex, card))  # DEBUG
+        if card.getNumber() - 1 == len(playedCards):  # 해당색의 카드를 카드를 줄지어 낼 수 있는 경우
+            playedCards.append(card)
+            didPlay = True
+            print("Play 성공!")  # DEBUG
         else:
-            if hint.isNumber():
-                hintString = "숫자 %d" % hint.info
-            else:
-                if hint.info is "R":
-                    hintString = "빨간색"
-                elif hint.info is "G":
-                    hintString = "초록색"
-                elif hint.info is "B":
-                    hintString = "파란색"
-                elif hint.info is "W":
-                    hintString = "하얀색"
-                else:
-                    hintString = "노란색"
+            discardedCardCounter = self.getDiscardedCardCounter(card.getColor())
+            discardedCardCounter[card.getNumber()] += 1
+            print("Play 실패! 라이프 토큰이 하나 감소합니다.")  # DEBUG
+            self.decreaseLifeToken()
+            didPlay = False
 
-            notice = ("{}번 플레이어의 힌트: \n {}번 플레이어의 {}번째 카드는 {} 입니다.".format(self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+        playerDeck.useCard(cardIndex)
+        if self.isGameEnd():
+            return
 
-            return notice
+        if not self.isCardsEmpty():
+            self.giveOneCard(self.currentPlayerIndex)
+            print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
+        else:
+            if self.lastPlayerIndex < 0:
+                self.lastPlayerIndex = self.currentPlayerIndex
+                print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
+
+        return didPlay
+
+    def doActionDiscard(self, action: Action):
+        """
+        카드 버리기 Action 을 수행하는 함수
+        :param action: 수행할 action. type 은 무조건 2이어야 한다.
+        """
+        assert action.getActionType() == 2, "<discard> must be action type 2"
+
+        playerDeck = self.playerDecks[self.currentPlayerIndex]
+        cardIndex = action.getCardIndex()
+
+        card = playerDeck.getCardOrNone(cardIndex)
+        discardedCardCounter = self.getDiscardedCardCounter(card.getColor())
+        discardedCardCounter[card.getNumber()] += 1
+        self.increaseHintToken()
+
+        print("%d번 플레이어가 %s 카드를 버렸습니다." % (self.currentPlayerIndex, card))  # DEBUG
+        print("힌트 토큰이 하나 증가합니다.(8 이상이면 증가하지 않음)")  # DEBUG
+
+        playerDeck.useCard(cardIndex)
+        if not self.isCardsEmpty():
+            self.giveOneCard(self.currentPlayerIndex)
+            print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
+        else:
+            if self.lastPlayerIndex < 0:
+                self.lastPlayerIndex = self.currentPlayerIndex
+                print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
+
+    def doActionHint(self, action: Action):
+        """
+        힌트주기 Action 을 수행하는 함수
+        :param action: 수행할 action. type 은 무조건 3이어야 한다.
+        :return: 힌트: Hint, 힌트 대상 인덱스: int, 힌트에 해당하는 카드 인덱스 리스트: List
+        """
+        assert action.getActionType() == 3, "<hint> must be action type 3"
+
+        targetIndex = action.getTargetIndex()
+        assert targetIndex is not self.currentPlayerIndex
+        correspondedIndexes = []
+
+        for i in range(4):
+            card = self.playerDecks[targetIndex].getCardOrNone(i)
+            if card is not None:
+                if card.isCorrespondedHint(action.getHint()):
+                    correspondedIndexes.append(i)
+
+        self.decreaseHintToken()
+        return action.getHint(), targetIndex, correspondedIndexes
 
     def calculateScore(self):
         # 점수 계산
-        score = len(self.__redPlayedCards) + len(self.__greenPlayedCards) + len(self.__bluePlayedCards) + len(self.__whitePlayedCards) + len(self.__yellowPlayedCards)
+        score = len(self.__redPlayedCards) + len(self.__greenPlayedCards) + len(self.__bluePlayedCards) + len(
+            self.__whitePlayedCards) + len(self.__yellowPlayedCards)
         return score
 
     def canHint(self):
@@ -237,3 +242,4 @@ class GameManager:
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
         print()
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
+

@@ -42,7 +42,7 @@ def printBoard(gameManager: GameManager):
     print("                                 Played              Discarded")
 
     playedCards = gameManager.getPlayedCards("R")
-    discardedCards = gameManager.getDiscardedCards("R")
+    discardedCards = gameManager.getDiscardedCardCounter("R")
     print(" No         %2s|%2s|%2s|%2s          %-20s%s" % (0, 1, 2, 3, playedCards, discardedCards))
 
     colors = ["G", "B", "W", "Y"]
@@ -53,7 +53,7 @@ def printBoard(gameManager: GameManager):
 
         playerDeckString = str(gameManager.getPlayerDeck(i))
         playedCards = gameManager.getPlayedCards(colors[i])
-        discardedCards = gameManager.getDiscardedCards(colors[i])
+        discardedCards = gameManager.getDiscardedCardCounter(colors[i])
 
         print("%sPlayer %d - %s          %-20s%s" % (marker, i, playerDeckString, playedCards, discardedCards))
     print()
@@ -787,5 +787,5 @@ def testGame2():            # 25점 만점 테스트
 # testGameS1()
 # testGameS2()
 # testGameS3()
-#testGame1()
+# testGame1()
 # testGame2()
