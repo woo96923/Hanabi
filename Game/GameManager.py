@@ -24,12 +24,18 @@ class GameManager:
         self.__whitePlayedCards = []
         self.__yellowPlayedCards = []
 
-        # self.discardedCards = []
-        self.__redDiscardedCards = []
-        self.__greenDiscardedCards = []
-        self.__blueDiscardedCards = []
-        self.__whiteDiscardedCards = []
-        self.__yellowDiscardedCards = []
+        # self.discardedCards = [COLOR, 1_cnt, 2_cnt, 3_cnt, 4_cnt, 5_cnt]
+        self.__redDiscardedCardCounter = ['R', 0, 0, 0, 0, 0]
+        self.__greenDiscardedCardCounter = ['G', 0, 0, 0, 0, 0]
+        self.__blueDiscardedCardCounter = ['B', 0, 0, 0, 0, 0]
+        self.__whiteDiscardedCardCounter = ['W', 0, 0, 0, 0, 0]
+        self.__yellowDiscardedCardCounter = ['Y', 0, 0, 0, 0, 0]
+
+        self.__discardedCardCounterList = [ self.__redDiscardedCardCounter,
+                                        self.__greenDiscardedCardCounter,
+                                        self.__blueDiscardedCardCounter,
+                                        self.__whiteDiscardedCardCounter,
+                                        self.__yellowDiscardedCardCounter ]
 
     def isCardsEmpty(self):
         # 카드더미가 비었는지 확인하는 함수
@@ -102,18 +108,21 @@ class GameManager:
             return self.__whitePlayedCards
         return self.__yellowPlayedCards
 
-    def getDiscardedCards(self, color: str):
+    def getDiscardedCardCounter(self, color: str):
         assert color == "R" or color == "G" or color == "B" or color == "W" or color == "Y", "invalid card color"
 
         if color == "R":
-            return self.__redDiscardedCards
+            return self.__redDiscardedCardCounter
         elif color == "G":
-            return self.__greenDiscardedCards
+            return self.__greenDiscardedCardCounter
         elif color == "B":
-            return self.__blueDiscardedCards
+            return self.__blueDiscardedCardCounter
         elif color == "W":
-            return self.__whiteDiscardedCards
-        return self.__yellowDiscardedCards
+            return self.__whiteDiscardedCardCounter
+        return self.__yellowDiscardedCardCounter
+
+    def getDiscardedCardCounterList(self):
+        return self.__discardedCardCounterList
 
     def doAction(self, action: Action):
         """
@@ -134,8 +143,8 @@ class GameManager:
                 print("Play 성공!")       # DEBUG
                 return 1
             else:
-                discardedCards = self.getDiscardedCards(card.getColor())
-                discardedCards.append(card)
+                discardedCards = self.getDiscardedCardCounter(card.getColor())
+                discardedCards[card.getNumber()] += 1;
                 print("Play 실패! 라이프 토큰이 하나 감소합니다.")  # DEBUG
                 self.decreaseLifeToken()
                 return 0
@@ -158,9 +167,9 @@ class GameManager:
             cardIndex = action.getCardIndex()
 
             card = playerDeck.getCardOrNone(cardIndex)
-            discardedCards = self.getDiscardedCards(card.getColor())
+            discardedCards = self.getDiscardedCardCounter(card.getColor())
 
-            discardedCards.append(card)
+            discardedCards[card.getNumber()] += 1;
             self.increaseHintToken()
 
             print("%d번 플레이어가 %s 카드를 버렸습니다." % (self.currentPlayerIndex, card))          # DEBUG
