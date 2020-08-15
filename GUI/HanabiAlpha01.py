@@ -49,21 +49,16 @@ class HanabiGui(QMainWindow, MainAlpha):
                          [self.player2Deck0, self.player2Deck1, self.player2Deck2, self.player2Deck3],
                          [self.player3Deck0, self.player3Deck1, self.player3Deck2, self.player3Deck3]]
         # 낸 카드의 list
-        self.drpoedCardList = [[self.mainR1, self.mainR2, self.mainR3, self.mainR4, self.mainR5],
-                               [self.mainG1, self.mainG2, self.mainG3, self.mainG4, self.mainG5],
-                               [self.mainB1, self.mainB2, self.mainB3, self.mainB4, self.mainB5],
-                               [self.mainY1, self.mainY2, self.mainY3, self.mainY4, self.mainY5],
-                               [self.mainW1, self.mainW2, self.mainW3, self.mainW4, self.mainW5]]
+        self.drpoedCardList = [self.playedRed, self.playedGreen, self.playedBlue, self.playedWhite, self.playedYellow]
         # 버린 카드의 list
         self.thrownCardList = [[self.throwR1, self.throwR2, self.throwR3, self.throwR4, self.throwR5],
                                [self.throwG1, self.throwG2, self.throwG3, self.throwG4, self.throwG5],
                                [self.throwB1, self.throwB2, self.throwB3, self.throwB4, self.throwB5],
-                               [self.throwY1, self.throwY2, self.throwY3, self.throwY4, self.throwY5],
-                               [self.throwW1, self.throwW2, self.throwW3, self.throwW4, self.throwW5]]
+                               [self.throwW1, self.throwW2, self.throwW3, self.throwW4, self.throwW5],
+                               [self.throwY1, self.throwY2, self.throwY3, self.throwY4, self.throwY5]]
 
-        for cards in self.drpoedCardList:
-            for card in cards:
-                card.setText("0")
+        for card in self.drpoedCardList:
+            card.setText("0")
         print(type(self.player3Deck2))
         for deck in self.gm.playerDecks:
             print(deck)
@@ -89,29 +84,32 @@ class HanabiGui(QMainWindow, MainAlpha):
         self.setWindowTitle('Hanabi')
         self.show()
 
+    # 카드 버리기 창
     def ShowThrowDeck(self):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Throw window...")
-            # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다.
-            self.w = AppThrowDeck(self.gm.currentPlayerIndex, self.gm, self.deckList)
+            self.w = AppThrowDeck(self.gm.currentPlayerIndex, self.gm, self.deckList, self.notice)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
 
+    # 카드 내기 창
     def ShowDropDeck(self):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Drop window...")
-            self.w = AppDropDeck(self.gm.currentPlayerIndex, self.gm, self.deckList, self.drpoedCardList, self.thrownCardList)
+            self.w = AppDropDeck(self.gm.currentPlayerIndex, self.gm, self.deckList, self.drpoedCardList,
+                                 self.thrownCardList, self.notice)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
 
+    # 힌트 주기 창
     def ShowGiveHint(self):
         # 내 차례라면 창을 연다.
             if self.isTurn:
                 print("Opening a GiveHint window...")
                 # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다 .
-                self.w = AppGiveHint(self.gm.currentPlayerIndex, self.gm, self.deckList)
+                self.w = AppGiveHint(self.gm.currentPlayerIndex, self.gm, self.deckList, self.notice)
                 self.w.setGeometry(QRect(700, 400, 300, 200))
                 self.w.show()
 
@@ -192,13 +190,15 @@ def SetCardDesign(color, deck):
                            )
 
 
-class AppThrowDeck(QWidget): #카드 버리기 창
-    def __init__(self, clientIndex, gm, deckList):
+#카드 버리기 창
+class AppThrowDeck(QWidget):
+    def __init__(self, clientIndex, gm, deckList, notice):
         QWidget.__init__(self)
         self.gm = gm
         self.playerDeck = self.gm.playerDecks[clientIndex]
         self.buttonGroup = QButtonGroup()
         self.deckList = deckList
+        self.notice = notice
         self.initUI()
 
     def initUI(self):
@@ -235,11 +235,19 @@ class AppThrowDeck(QWidget): #카드 버리기 창
         for button in self.buttonGroup.buttons():
             if button is self.buttonGroup.button(id):
                 # print("{}번 플레이어가 {}번째 카드를 버렸습니다.".format(self.gm.currentPlayerIndex, id + 1)) # for debugging
-                self.gm.doAction(Action(2, id))
+                isCardEmpty = self.gm.doActionDiscard(Action(2, id))
                 self.deckList[self.gm.currentPlayerIndex][id].setText(
                     str(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)))
                 SetCardDesign(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor(),
                               self.deckList[self.gm.currentPlayerIndex][id])
+                # 덱이 비었다면
+                if isCardEmpty:
+                    notice = "덱 빔 ㅎㅎ"
+                    self.notice.setText(notice)
+                else:
+                    notice = "%d번 플레이어가 %s 카드를 버렸습니다.\n" % (self.gm.currentPlayerIndex,
+                            str(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)))
+                    self.notice.setText(notice)
                 self.gm.nextTurn()
                 self.close()
 
@@ -251,7 +259,7 @@ class AppDropDeck(QWidget):
         self.gm = gm
         self.droppedCardList = droppedCardList
         self.thrownCardList = thrownCardList
-        self.colorList = {"R" : 0, "G" : 1, "B" : 2, "Y" : 3, "W" : 4}
+        self.colorList = {"R" : 0, "G" : 1, "B" : 2, "W" : 3, "Y" : 4}
         self.playerNum = clientIndex
         self.deckGroup = QButtonGroup()
         self.buttonGroup = QButtonGroup()
