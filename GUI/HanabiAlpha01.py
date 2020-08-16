@@ -284,7 +284,6 @@ class AppThrowDeck(QWidget):
 
                 # notice 갱신
                 self.notice.setText(notices)
-                self.gm.nextTurn()
 
                 # 힌트 주기 버튼 갱신
                 self.btnGiveHint.setEnabled(True)
@@ -298,6 +297,9 @@ class AppThrowDeck(QWidget):
                 # thrownCard 갱신
                 self.thrownCardList[self.colorDict[cardDiscarded.getColor()]][cardDiscarded.getNumber() - 1].\
                     setText(str(self.gm.getDiscardedCardCounter(cardDiscarded.getColor())[cardDiscarded.getNumber()]))
+
+                # 게임 진행
+                self.gm.nextTurn()
                 self.close()
 
 
