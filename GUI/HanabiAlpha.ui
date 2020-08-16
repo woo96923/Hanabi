@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
+    <width>783</width>
     <height>407</height>
    </rect>
   </property>
@@ -618,9 +618,7 @@ border-width : 2px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string>Notice
-player 1이 player 2에게 힌트를 줌 
- ; ~~ 카드가 흰색이다.</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -2035,7 +2033,7 @@ border-color : rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>781</width>
+     <width>783</width>
      <height>26</height>
     </rect>
    </property>

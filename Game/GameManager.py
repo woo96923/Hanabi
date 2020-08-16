@@ -205,7 +205,7 @@ class GameManager:
             if self.lastPlayerIndex < 0:
                 self.lastPlayerIndex = self.currentPlayerIndex
                 print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
-        return self.isCardsEmpty()
+
 
     def doActionHint(self, action: Action):
         """
@@ -226,7 +226,7 @@ class GameManager:
                     correspondedIndexes.append(i)
 
         self.decreaseHintToken()
-        return action.getHint(), targetIndex, correspondedIndexes
+        return action.getHint(), correspondedIndexes
 
     def calculateScore(self):
         # 점수 계산
