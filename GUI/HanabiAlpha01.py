@@ -284,16 +284,15 @@ class AppThrowDeck(QWidget):
 
                 # 덱이 비지 않았다면
                 if not self.gm.isCardsEmpty():
-                    notices = ("%d번 플레이어가 %s 카드를 버렸습니다.\n 힌트 토큰이 하나 증가합니다. (8 이상이면 증가하지 않음)" %
+                    notice = ("%d번 플레이어가 %s 카드를 버렸습니다.\n 힌트 토큰이 하나 증가합니다. (8 이상이면 증가하지 않음)" %
                                (self.gm.currentPlayerIndex, str(cardDiscarded)))
                 # 덱이 비었다면
                 else:
-                    notices = ("%d번 플레이어가 %s 카드를 버렸습니다.\n 힌트 토큰이 하나 증가합니다. (8 이상이면 증가하지 않음)\n "
+                    notice = ("%d번 플레이어가 %s 카드를 버렸습니다.\n 힌트 토큰이 하나 증가합니다. (8 이상이면 증가하지 않음)\n "
                                "카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." %
                                (self.gm.currentPlayerIndex, str(cardDiscarded), (self.gm.currentPlayerIndex + 3) % 4))
 
-                # notice 갱신
-                self.notice.setText(notices)
+
 
                 # 힌트 주기 버튼 갱신
                 self.btnGiveHint.setEnabled(True)
@@ -309,7 +308,18 @@ class AppThrowDeck(QWidget):
                     setText(str(self.gm.getDiscardedCardCounter(cardDiscarded.getColor())[cardDiscarded.getNumber()]))
 
                 # 게임 진행
-                self.gm.nextTurn()
+                endFlag = self.gm.nextTurn()
+
+                if endFlag == None:
+                    pass
+                else:
+                    print("카드 버리기로 게임 끝")  # DEBUG
+                    notice = "게임 종료!\n" \
+                             "최종 점수: %d점" % (self.gm.calculateScore())
+                    self.hanabiGui.close()
+
+                # notice 갱신
+                self.notice.setText(notice)
                 self.close()
 
 
@@ -456,6 +466,7 @@ class AppDropDeck(QWidget):
                 if endFlag == None:
                     pass
                 else:
+                    print("카드 내기로 게임 끝")  # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
                     self.hanabiGui.close()
@@ -622,6 +633,7 @@ class AppGiveHint(QWidget):
                     notice = "%d번 플레이어가 %d번 플레이어에게 \n %s 카드가 없음을 알려주었습니다.\n" \
                              "힌트 토큰이 하나 감소합니다." % (self.gm.currentPlayerIndex - 1, self.playerNum, hint)
                 if endFlag:
+                    print("힌트 주기로 게임 끝") # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
                     time.sleep(5)
