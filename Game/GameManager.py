@@ -176,10 +176,10 @@ class GameManager:
         if not self.isCardsEmpty():
             self.giveOneCard(self.currentPlayerIndex)
             # print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
-        else:
-            if self.lastPlayerIndex < 0:
-                self.lastPlayerIndex = self.currentPlayerIndex
-                # print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
+            if self.isCardsEmpty():
+                if self.lastPlayerIndex < 0:
+                    self.lastPlayerIndex = self.currentPlayerIndex
+                    # print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
 
         return didPlay
 
@@ -203,11 +203,11 @@ class GameManager:
         playerDeck.useCard(cardIndex)
         if not self.isCardsEmpty():
             self.giveOneCard(self.currentPlayerIndex)
-            print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
-        else:
-            if self.lastPlayerIndex < 0:
-                self.lastPlayerIndex = self.currentPlayerIndex
-                print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
+            # print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
+            if self.isCardsEmpty():
+                if self.lastPlayerIndex < 0:
+                    self.lastPlayerIndex = self.currentPlayerIndex
+                    # print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))  # DEBUG
 
 
     def doActionHint(self, action: Action):

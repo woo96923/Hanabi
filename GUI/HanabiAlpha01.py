@@ -290,7 +290,7 @@ class AppThrowDeck(QWidget):
                 else:
                     notice = ("%d번 플레이어가 %s 카드를 버렸습니다.\n 힌트 토큰이 하나 증가합니다. (8 이상이면 증가하지 않음)\n "
                                "카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." %
-                               (self.gm.currentPlayerIndex, str(cardDiscarded), (self.gm.currentPlayerIndex + 3) % 4))
+                               (self.gm.currentPlayerIndex, str(cardDiscarded), self.gm.lastPlayerIndex))
 
 
 
@@ -312,10 +312,11 @@ class AppThrowDeck(QWidget):
 
                 if endFlag == None:
                     pass
-                else:
+                if endFlag == 1 or self.gm.getLifeToken() == 0:
                     print("카드 버리기로 게임 끝")  # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
+                    time.sleep(3)
                     self.hanabiGui.close()
 
                 # notice 갱신
@@ -465,11 +466,15 @@ class AppDropDeck(QWidget):
 
                 if endFlag == None:
                     pass
-                else:
+                if endFlag == 1 or self.gm.getLifeToken() == 0:
                     print("카드 내기로 게임 끝")  # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
-                    self.hanabiGui.close()
+                    self.notice.setText(notice)
+                    self.close()
+
+                    # 게임이 끝나면 행동 버튼 눌리지 않게 처리함. 추후 변경 필요
+                    self.hanabiGui.isTurn = 0
                 # 카드 내기 후 notice 갱신
                 self.notice.setText(notice)
 
