@@ -8,6 +8,8 @@ from Game.GameManagerTest import initCards
 from Game.GameElements import Action as Action
 from Game.GameElements import Hint as Hint
 
+import time
+
 FONTSIZE = 10
 
 # 파일명만 바꿔서
@@ -54,8 +56,13 @@ class HanabiGui(QMainWindow, MainAlpha):
                          [self.player1Deck0, self.player1Deck1, self.player1Deck2, self.player1Deck3],
                          [self.player2Deck0, self.player2Deck1, self.player2Deck2, self.player2Deck3],
                          [self.player3Deck0, self.player3Deck1, self.player3Deck2, self.player3Deck3]]
+
+
+
+
         # 낸 카드의 list
         self.drpoedCardList = [self.playedRed, self.playedGreen, self.playedBlue, self.playedWhite, self.playedYellow]
+
         # 버린 카드의 list
         self.thrownCardList = [[self.throwR1, self.throwR2, self.throwR3, self.throwR4, self.throwR5],
                                [self.throwG1, self.throwG2, self.throwG3, self.throwG4, self.throwG5],
@@ -103,7 +110,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Throw window...")
-            self.w = AppThrowDeck(self.gm, self.deckList, self.notice, self.btnGiveHint, self.remainDeck,
+            self.w = AppThrowDeck(self, self.gm, self.deckList, self.notice, self.btnGiveHint, self.remainDeck,
                                   self.thrownCardList, self.hintTokenList)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
@@ -113,7 +120,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Drop window...")
-            self.w = AppDropDeck(self.gm, self.deckList, self.drpoedCardList,
+            self.w = AppDropDeck(self, self.gm, self.deckList, self.drpoedCardList,
                                  self.thrownCardList, self.notice, self.lifeTokenList, self.remainDeck)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()
@@ -124,7 +131,7 @@ class HanabiGui(QMainWindow, MainAlpha):
             if self.isTurn and self.gm.getHintToken() != 0:
                 print("Opening a GiveHint window...")
                 # 플레이어 덱 정보를 넘겨야 하므로 gm.playerDecks 를 매개변수로 넣는다 .
-                self.w = AppGiveHint(self.gm, self.notice, self.btnGiveHint, self.hintTokenList)
+                self.w = AppGiveHint(self, self.gm, self.notice, self.btnGiveHint, self.hintTokenList)
                 self.w.setGeometry(QRect(700, 400, 300, 200))
                 self.w.show()
 
@@ -207,7 +214,7 @@ def SetCardDesign(color, deck):
 
 #카드 버리기 창
 class AppThrowDeck(QWidget):
-    def __init__(self, gm: GM, deckList, notice: QLabel, btnGiveHint: QPushButton, remainDeck: QLabel
+    def __init__(self, hanabiGUI: HanabiGui, gm: GM, deckList: list, notice: QLabel, btnGiveHint: QPushButton, remainDeck: QLabel
                  , thrownCardList: list, hintTokenList: list):
         QWidget.__init__(self)
         self.gm = gm
@@ -220,6 +227,7 @@ class AppThrowDeck(QWidget):
         self.thrownCardList = thrownCardList
         self.hintTokenList = hintTokenList
         self.colorDict = {"R": 0, "G": 1, "B": 2, "W": 3, "Y": 4}
+        self.hanabiGUI = hanabiGUI
         self.initUI()
 
     def initUI(self):
@@ -266,11 +274,13 @@ class AppThrowDeck(QWidget):
                 # 새로 표시할 카드
                 card = self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)
 
-                # 카드 갱신
-                self.deckList[self.gm.currentPlayerIndex][id].setText(str(card))
-
-                # 현재 하나의 gui 에서 플레이할 때 확이하기 위해 남겨둠. 추후 서버 통합시 유저의 카드 확인 불가.
-                SetCardDesign(card.getColor(), self.deckList[self.gm.currentPlayerIndex][id])
+                if card == None:
+                    self.deckList[self.gm.currentPlayerIndex][id].setText("None")
+                    SetCardDesign("mine", self.deckList[self.gm.currentPlayerIndex][id])
+                else:
+                    # 현재 하나의 gui 에서 플레이할 때 확이하기 위해 남겨둠. 추후 서버 통합시 유저의 카드 확인 불가.
+                    self.deckList[self.gm.currentPlayerIndex][id].setText(str(card))
+                    SetCardDesign(card.getColor(), self.deckList[self.gm.currentPlayerIndex][id])
 
                 # 덱이 비지 않았다면
                 if not self.gm.isCardsEmpty():
@@ -305,12 +315,13 @@ class AppThrowDeck(QWidget):
 
 # 카드 내기 창
 class AppDropDeck(QWidget):
-    def __init__(self, gm: GM, deckList: list, droppedCardList: list , thrownCardList: list,
+    def __init__(self, hanabiGui: HanabiGui, gm: GM, deckList: list, droppedCardList: list , thrownCardList: list,
                  notice: QLabel, lifeTokenList: list, remainDeck: QLabel):
         QWidget.__init__(self)
+        self.hanabiGui = hanabiGui
         self.gm = gm
         self.droppedCardList = droppedCardList
-        self.DeckList = deckList
+        self.deckList = deckList
         self.thrownCardList = thrownCardList
         self.notice = notice
         self.lifeTokenList = lifeTokenList
@@ -318,38 +329,42 @@ class AppDropDeck(QWidget):
         self.colorDict = {"R" : 0, "G" : 1, "B" : 2, "W" : 3, "Y" : 4}
         self.deckGroup = QButtonGroup()
         self.buttonGroup = QButtonGroup()
-        self.deckList = deckList
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle("카드 내기")
-        deck0 = QPushButton("??")
-        deck1 = QPushButton("??")
-        deck2 = QPushButton("??")
-        deck3 = QPushButton("??")
+        self.deck0 = QPushButton()
+        self.deck1 = QPushButton()
+        self.deck2 = QPushButton()
+        self.deck3 = QPushButton()
 
         self.buttonGroup.buttonClicked[int].connect(self.playCard)
-        self.buttonGroup.addButton(deck0, 0)
-        self.buttonGroup.addButton(deck1, 1)
-        self.buttonGroup.addButton(deck2, 2)
-        self.buttonGroup.addButton(deck3, 3)
+        self.buttonGroup.addButton(self.deck0, 0)
+        self.buttonGroup.addButton(self.deck1, 1)
+        self.buttonGroup.addButton(self.deck2, 2)
+        self.buttonGroup.addButton(self.deck3, 3)
 
         layout1 = QHBoxLayout()
-        layout1.addWidget(deck0)
-        layout1.addWidget(deck1)
-        layout1.addWidget(deck2)
-        layout1.addWidget(deck3)
+        layout1.addWidget(self.deck0)
+        layout1.addWidget(self.deck1)
+        layout1.addWidget(self.deck2)
+        layout1.addWidget(self.deck3)
 
-        deck0.setMaximumHeight(400)
-        deck1.setMaximumHeight(400)
-        deck2.setMaximumHeight(400)
-        deck3.setMaximumHeight(400)
+        self.deck0.setMaximumHeight(400)
+        self.deck1.setMaximumHeight(400)
+        self.deck2.setMaximumHeight(400)
+        self.deck3.setMaximumHeight(400)
         self.setLayout(layout1)
 
-        SetCardDesign("mine", deck0)
-        SetCardDesign("mine", deck1)
-        SetCardDesign("mine", deck2)
-        SetCardDesign("mine", deck3)
+        self.cardList = [self.deck0, self.deck1, self.deck2, self.deck3]
+
+        for i, deck in enumerate(self.cardList):
+            card = self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(i)
+            if card is None:
+                deck.setText("None")
+            else:
+                deck.setText("??")
+            SetCardDesign("mine", deck)
         self.setLayout(layout1)
 
     def playCard(self, id):
@@ -365,7 +380,7 @@ class AppDropDeck(QWidget):
                 number = playedCard.getNumber()
                 # print("{}번 플레이어가 {}번째 카드를 냈습니다.".format(self.gm.currentPlayerIndex, id + 1)) # DEBUG
                 '''
-                카드 배치 성공 여부에 따라 행동이 달라짐.
+                카드 배치 성공 여부에 따라 행동이 달라짐. 
                 성공했다면 playedCardList를, 실패했다면 discardedCardList 를 조작해주어야 함.
                 우선 doAction 함수의 카드를 내는 부분에만 early return 을 넣어주어 성공 여부를 구분했음.
                 1) 이를 개선할 방법이 있는지 알아봐야 함.
@@ -381,7 +396,6 @@ class AppDropDeck(QWidget):
                 # 게임 진행 및 flag 설정
                 flag = self.gm.doActionPlay(Action(1, id))
 
-
                 # 카드 놓는 데에 성공했으면
                 if flag:
                     # 낸 카드 ui 갱신
@@ -392,7 +406,6 @@ class AppDropDeck(QWidget):
                                  "%d번째 플레이어가 %s 카드를 냈습니다.\n" \
                                  "%d번 플레이어가 새로운 카드를 받았습니다." % (self.gm.currentPlayerIndex, str(playedCard),
                                                                self.gm.currentPlayerIndex)
-
                     # 남은 덱이 없으면
                     else:
                         notice = "Play 성공!\n" \
@@ -428,27 +441,39 @@ class AppDropDeck(QWidget):
                 # 카드 낸 후 남은 카드 갱신
                 self.remainDeck.setText("남은 카드 \n%d" % len(self.gm.cards))
 
-                # 카드 낸 후 덱 ui 갱신
-                self.deckList[self.gm.currentPlayerIndex][id].setText(
-                    str(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)))
-                SetCardDesign(self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id).getColor(),
-                              self.deckList[self.gm.currentPlayerIndex][id])
+                # 새로 표시할 카드
+                card = self.gm.playerDecks[self.gm.currentPlayerIndex].getCardOrNone(id)
+                if card == None:
+                    self.deckList[self.gm.currentPlayerIndex][id].setText("None")
+                    SetCardDesign("mine", self.deckList[self.gm.currentPlayerIndex][id])
+                else:
+                    # 현재 하나의 gui 에서 플레이할 때 확이하기 위해 남겨둠. 추후 서버 통합시 유저의 카드 확인 불가.
+                    self.deckList[self.gm.currentPlayerIndex][id].setText(str(card))
+                    SetCardDesign(card.getColor(), self.deckList[self.gm.currentPlayerIndex][id])
 
+                endFlag = self.gm.nextTurn()
+
+                if endFlag == None:
+                    pass
+                else:
+                    notice = "게임 종료!\n" \
+                             "최종 점수: %d점" % (self.gm.calculateScore())
+                    self.hanabiGui.close()
                 # 카드 내기 후 notice 갱신
                 self.notice.setText(notice)
 
-                self.gm.nextTurn()
                 self.close()
 
 
 # 힌트주기 창
 class AppGiveHint(QWidget):
-    def __init__(self, gm: GM, notice: QLabel, btnGiveHint: QPushButton, hintTokenList: list):
+    def __init__(self, hanabiGui: HanabiGui, gm: GM, notice: QLabel, btnGiveHint: QPushButton, hintTokenList: list):
         '''
         :param gm: gameManager
         :param notice: 게임진행 상황 출력하는 QLabel.
         '''
         QWidget.__init__(self)
+        self.HanabiGui = hanabiGui
         self.gm = gm
         # 첫 창에 뜨는 카드가 자신이 0번유저면 1, 아니면 0이 나오게 함.
         self.playerNum = 1 if self.gm.currentPlayerIndex == 0 else 0
@@ -467,6 +492,10 @@ class AppGiveHint(QWidget):
         player2 = "1번의 아이디"
         player3 = "2번의 아이디"
         player4 = "3번의 아이디"
+        self.deck0 = QLabel()
+        self.deck1 = QLabel()
+        self.deck2 = QLabel()
+        self.deck3 = QLabel()
 
         # QComboBox 현재 플레이 중인 유저 아이디 제외하고 출력
         playerList = [player1, player2, player3, player4]
@@ -478,11 +507,15 @@ class AppGiveHint(QWidget):
         self.buttonGroup.buttonClicked[int].connect(self.giveHint)
         cob.activated[str].connect(self.onActivated)
 
+        deckList = [self.deck0, self.deck1, self.deck2, self.deck3]
         layout2 = QHBoxLayout()
-        self.deck0 = QLabel(str(self.gm.playerDecks[self.playerNum].getCardOrNone(0)))
-        self.deck1 = QLabel(str(self.gm.playerDecks[self.playerNum].getCardOrNone(1)))
-        self.deck2 = QLabel(str(self.gm.playerDecks[self.playerNum].getCardOrNone(2)))
-        self.deck3 = QLabel(str(self.gm.playerDecks[self.playerNum].getCardOrNone(3)))
+        for i, deck in enumerate(deckList):
+            if self.gm.playerDecks[self.playerNum].getCardOrNone(i) is None:
+                deck.setText("None")
+                SetCardDesign("mine", self.deck0)
+            else:
+                deck.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(i)))
+                SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(i).getColor(), deck)
 
         layout2.addWidget(self.deck0)
         layout2.addWidget(self.deck1)
@@ -503,11 +536,6 @@ class AppGiveHint(QWidget):
         self.deck1.setAlignment(Qt.AlignCenter)
         self.deck2.setAlignment(Qt.AlignCenter)
         self.deck3.setAlignment(Qt.AlignCenter)
-
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
 
         btnNumber1 = QPushButton("1")
         btnNumber2 = QPushButton("2")
@@ -558,14 +586,15 @@ class AppGiveHint(QWidget):
     def onActivated(self, text):
         # 현재는 "n번의 아이디"에서 n을 가져오는 최악의 방식으로 playerNum 갱신 중. 수정 필요.
         self.playerNum = int(text[0])
-        self.deck0.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(0)))
-        self.deck1.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(1)))
-        self.deck2.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(2)))
-        self.deck3.setText(str(self.gm.playerDecks[self.playerNum].getCardOrNone(3)))
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(0).getColor(), self.deck0)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(1).getColor(), self.deck1)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(2).getColor(), self.deck2)
-        SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(3).getColor(), self.deck3)
+        deckList = [self.deck0, self.deck1, self.deck2, self.deck3]
+        for i, deck in enumerate(deckList):
+            card = self.gm.playerDecks[self.playerNum].getCardOrNone(i)
+            if card == None:
+                deck.setText("None")
+                SetCardDesign("mine", deck)
+            else:
+                deck.setText(str(card))
+                SetCardDesign(self.gm.playerDecks[self.playerNum].getCardOrNone(i).getColor(), deck)
 
     def giveHint(self, id):
         '''
@@ -574,15 +603,15 @@ class AppGiveHint(QWidget):
         colorDict = {5: "R", 6: "G", 7: "B", 8: "W", 9: "Y"}
         for button in self.buttonGroup.buttons():
             if button is self.buttonGroup.button(id):
-                # print("{}번째 플레이어에게 {}로 힌트를 주었습니다.".format(self.playerNum, button.text())) # for debugging
+                # print("{}번째 플레이어에게 {}로 힌트를 주었습니다.".format(self.playerNum, button.text())) # DEBUG
                 # 숫자 버튼이면?
                 if 0 <= id <= 4:
                     hint, correspondedIndexes = self.gm.doAction(Action(3, Hint(id + 1), self.playerNum))
-                    self.gm.nextTurn()
+                    endFlag = self.gm.nextTurn()
                     self.close()
                 if 5 <= id <= 9:
                     hint, correspondedIndexes = self.gm.doAction(Action(3, Hint(colorDict[id]), self.playerNum))
-                    self.gm.nextTurn()
+                    endFlag = self.gm.nextTurn()
                     self.close()
                 # ~가 없다는 힌트 줄 때
                 if len(correspondedIndexes) != 0:
@@ -592,6 +621,11 @@ class AppGiveHint(QWidget):
                 else:
                     notice = "%d번 플레이어가 %d번 플레이어에게 \n %s 카드가 없음을 알려주었습니다.\n" \
                              "힌트 토큰이 하나 감소합니다." % (self.gm.currentPlayerIndex - 1, self.playerNum, hint)
+                if endFlag:
+                    notice = "게임 종료!\n" \
+                             "최종 점수: %d점" % (self.gm.calculateScore())
+                    time.sleep(5)
+                    self.hanabiGui.close()
                 self.notice.setText(notice)
 
                 self.hintTokenList[self.gm.getHintToken()].setText("X")

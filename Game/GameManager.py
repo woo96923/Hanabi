@@ -76,6 +76,9 @@ class GameManager:
             self.onGameEnd()
 
     def nextTurn(self):
+        '''
+        :return: 게임이 끝났으면 1, 아니면 0을 반환.
+        '''
         self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
         if self.lastPlayerIndex == self.currentPlayerIndex:
             self.onGameEnd()
@@ -242,4 +245,6 @@ class GameManager:
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
         print()
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
+        return 1
+
 
