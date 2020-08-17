@@ -312,7 +312,7 @@ class AppThrowDeck(QWidget):
 
                 if endFlag == None:
                     pass
-                if endFlag == 1 or self.gm.getLifeToken() == 0:
+                if endFlag == 1 or self.gm.getLifeToken() == 0 or self.gm.currentPlayerIndex == self.gm.lastPlayerIndex:
                     print("카드 버리기로 게임 끝")  # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
@@ -466,7 +466,7 @@ class AppDropDeck(QWidget):
 
                 if endFlag == None:
                     pass
-                if endFlag == 1 or self.gm.getLifeToken() == 0:
+                if endFlag == 1 or self.gm.getLifeToken() == 0 or self.gm.currentPlayerIndex == self.gm.lastPlayerIndex:
                     print("카드 내기로 게임 끝")  # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
@@ -637,7 +637,7 @@ class AppGiveHint(QWidget):
                 else:
                     notice = "%d번 플레이어가 %d번 플레이어에게 \n %s 카드가 없음을 알려주었습니다.\n" \
                              "힌트 토큰이 하나 감소합니다." % (self.gm.currentPlayerIndex - 1, self.playerNum, hint)
-                if endFlag:
+                if endFlag or self.gm.currentPlayerIndex == self.gm.lastPlayerIndex:
                     print("힌트 주기로 게임 끝") # DEBUG
                     notice = "게임 종료!\n" \
                              "최종 점수: %d점" % (self.gm.calculateScore())
