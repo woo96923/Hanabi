@@ -46,6 +46,7 @@ class GameManager:
         아직은 수동으로 IP주소를 수정해주어야함
         '''
 
+
     def isCardsEmpty(self):
         # 카드더미가 비었는지 확인하는 함수
         return len(self.cards) == 0
