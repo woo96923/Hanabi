@@ -5,6 +5,11 @@ import types
 import time
 import Server.Commends
 
+COMMENDKEY = '//'
+ITISCHAT = '#C'
+ITISPLAYERNUMBER = '#P'
+
+
 class client():
     def __init__(self,IP,port):
         self.IP = IP
@@ -21,7 +26,7 @@ class client():
             self.s.connect((self.IP, self.port))
             print('connected with Server')
             recevePN = self.s.recv(self.size)
-            if recevePN.decode()[0:2] == Server.Commends.ITISPLAYERNUMBER:
+            if recevePN.decode()[0:2] == ITISPLAYERNUMBER:
                 self.playerNumber = recevePN.decode()[2]
                 print('Your player number is ', self.playerNumber)
             else:
@@ -40,6 +45,7 @@ class client():
         while True:
             data = input('>>>')
             s.send(data.encode())
+        print("Closed sendingMsg Thread")
         s.close()
 
     def gettingMsg(self,s):
@@ -47,11 +53,12 @@ class client():
         print("opend gettingMsg Thread")
         while True:
             data = s.recv(1024)
-            if data.decode()[0:2] == Server.Commends.COMMENDKEY:#서버로 부터 받은게 커맨드라면
+            if data.decode()[0:2] == COMMENDKEY:#서버로 부터 받은게 커맨드라면
                 return data
-            elif data.decode()[0:2] == Server.Commends.ITISCHAT:#채팅이라면
+            elif data.decode()[0:2] == ITISCHAT:#채팅이라면
                 print('\n','Player ',data.decode[2],' : ',data.decode()[3:])
-                return Server.Commends.ITISCHAT
+                return ITISCHAT
+        print("Closed gettingMsg Thread")
         s.close()
 
     def myPlayerNumberis(self):
@@ -61,16 +68,16 @@ class client():
     def run(self):
 
         get = threading.Thread(target=self.gettingMsg, args=(self.s,))
-        get.daemon = True
+        #get.daemon = True
         get.start()
 
         send = threading.Thread(target=self.sendingMsg, args=(self.s,))
-        send.daemon = True
+        #send.daemon = True
         send.start()
 
         #threading._start_new_thread(self.sendingMsg, ())
         #threading._start_new_thread(self.gettingMsg, ())
-        print("program is ended")
+        #print("program is ended")
 
 
 c = client('localhost', 7777)

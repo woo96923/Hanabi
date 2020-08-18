@@ -5,6 +5,10 @@ import threading
 import Server.Commends
 
 
+MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
+COMMENDKEY = '//'
+ITISCHAT = '#C'
+ITISPLAYERNUMBER = '#P'
 
 
 playerNumber = 0
@@ -28,7 +32,7 @@ class Client(threading.Thread):
         #플레이어 넘버를 통신을 통해 지정해줌으로써 관리를 편하게 하고 보기도 편하게함
         #들어오는 순서대로 1, 2, 3, 4임ㅎ
         #누구만대로냐고? 내맘ㅎ
-        self.connection.sendall((Server.Commends.ITISPLAYERNUMBER+str(playerNumber)).encode())
+        self.connection.sendall((ITISPLAYERNUMBER+str(playerNumber)).encode())
         self.playerNumber = playerNumber
         playerNumber += 1
 
@@ -42,13 +46,14 @@ class Client(threading.Thread):
 
             print("Waiting msg from the client...")
             data = self.connection.recv(1024)
-            self.send_to_all_clients(data)
+            self.send_to_all_clients(data.decode())
 
     def send_to_all_clients(self, msg):#채팅 커맨드와 누구로부터 왔는지 메세지 순서대로 데이터 전송
-        msg = Server.Commends.ITISCHAT + str(self.playerNumber) + msg
+        msg = ITISCHAT + str(self.playerNumber) + msg
+        print(msg)
         for client in clients :
             print(self.playerNumber, 'sanding message to ', client.port)#누구한테 보내는지 확인용
-            client.connection.send(msg)
+            client.connection.send(msg.encode())
 
     def run(self):
         receiver = threading.Thread(target=self.receive)
@@ -68,9 +73,9 @@ class Server:
 
         :return:
         '''
-        global GAME, GAMESTART, GAMEEND
+        #global GAME, GAMESTART, GAMEEND
         #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
-        GAME = GAMESTART
+
         print('Game start : //game\nSelect player : //turn + playernumber')
         data = input('> ')
 
@@ -139,11 +144,11 @@ class Server:
 
     def run(self):
         self.open_socket()
-        self.server.listen(5)
+        self.server.listen(MAXPLAYERNUMBER)
         #b = threading.Thread(target= self.broadCast())
         #b.start()
 
-        while len(self.clients)!=Server.Commends.MAXPLAYERNUMBER:#접속 대기단계
+        while len(self.clients)!=MAXPLAYERNUMBER:#접속 대기단계
 
             connection, (ip, port) = self.server.accept()
 

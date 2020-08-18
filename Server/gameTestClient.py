@@ -35,7 +35,7 @@ class client():
     def run(self):
         '''
 
-        :return: 2개 또는 3개의 숫자 또는 문자
+        :return: 내 턴일 때 명령을 전달하는 2개 또는 3개의 숫자 또는 문자 ex) 13, 351, 3G2
         '''
         #print('waiting from Server')
         data = self.s.recv(self.size)
@@ -53,17 +53,7 @@ class client():
             print(data.decode())
             print(data.decode()[2], data.decode()[3], data.decode()[4])
             return data.decode()[2:]
-'''
-    def ifMyTurn(self):
-        data = input('> ')
-        self.s.sendall(data.encode())
-        self.s.recv(self.size)
-        return str(data)
 
-    def ifNotMyTurn(self,playerNumber):
-        print("player number ", playerNumber, "is playing Turn...")
-        return self.s.recv(self.size)
-        '''
 
 '''
 c = client('localhost', 6666)

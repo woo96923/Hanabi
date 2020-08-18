@@ -47,26 +47,23 @@ class Server:
     def gamestart(self):
         '''
 
-        :return:
+        서버에 4명이 접속하게되면 자동적으로 첫번째 플레이어부터 명령어 요청함
+        이 과정이 게임이 끝날때까지 계속됨
         '''
         global GAME, GAMESTART, GAMEEND
         #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
         GAME = GAMESTART
-        print('Game start : //game\nSelect player : //turn + playernumber')
-        data = input('> ')
 
-        if data == "//game":#menu 1
-            while GAME == GAMESTART:
-                for number, client in enumerate(self.clients):
-                    self.send_to_all_clients('//turn'+str(number))
-                    self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
-                    if GAME == GAMEEND:
-                        break
 
-        elif data[:6] == '//turn':
-            self.send_to_all_clients(data)
-            clientNumber = int(data[6]) - 1
-            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
+        while GAME == GAMESTART:
+            for number, client in enumerate(self.clients):
+                self.send_to_all_clients('//turn'+str(number))
+                msg = self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
+                self.send_to_all_clients(msg.decode())
+            if GAME == GAMEEND:
+                break
+
+
 
     def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
         '''
@@ -90,24 +87,17 @@ class Server:
         '''
         :param ip : 메세지를 받고싶은Client의 IP
         :param port : 메세지를 받고싶은Client의 port
+        :return Client의 메세지, 문자열의 형태임
         '''
-        global GAME,GAMESTART, GAMEEND
+        global GAME, GAMESTART, GAMEEND
         print("Running requestMsgToClient...")
         for client in self.clients :
             if client.ip == ip and client.port == port :
                 print('Found selected client...', ip, port)
 
                 msg = client.getMsg()
-                #print(msg.decode())
-                '''
-                if msg.decode() == '//endgame':
-                    GAME = GAMEEND
-                    break
-                elif msg.decode() == '//endturn':
-                    break
-                '''
-                self.send_to_all_clients(msg.decode())
-        #self.send_to_all_clients('players Turn is ended')
+                return msg
+
 
     def open_socket(self):
         try:
@@ -122,8 +112,6 @@ class Server:
         global MAXPLAYERNUMBER
         self.open_socket()
         self.server.listen(MAXPLAYERNUMBER)
-        #b = threading.Thread(target= self.broadCast())
-        #b.start()
 
         while len(self.clients)!=MAXPLAYERNUMBER :
 

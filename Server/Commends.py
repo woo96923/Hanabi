@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 GAMESTART = 1
 GAMEEND = 0
 GAME = 0
