@@ -3,7 +3,7 @@ from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
 from Server.GameServer import Server
-from Server.gameTestClient import client
+from Server.GameClient import client
 
 SERVERIP = 'localhost' #문자열 형식으로 ex) '127.0.0.1'
 SERVERPORT = 6666
