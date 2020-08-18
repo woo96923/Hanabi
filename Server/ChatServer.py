@@ -3,14 +3,18 @@ import socket
 import sys
 import threading
 
-GAMESTART = 1
-GAMEEND = 0
-GAME = 0
+
 MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
+COMMENDKEY = '//'
+ITISCHAT = '#C'
+ITISPLAYERNUMBER = '#P'
+
 
 playerNumber = 0
+clients = []
 
 class Client(threading.Thread):
+    global clients
 
     def __init__(self, ip, port, connection):
         '''
@@ -27,13 +31,32 @@ class Client(threading.Thread):
         #플레이어 넘버를 통신을 통해 지정해줌으로써 관리를 편하게 하고 보기도 편하게함
         #들어오는 순서대로 1, 2, 3, 4임ㅎ
         #누구만대로냐고? 내맘ㅎ
-        self.connection.sendall(('//PN'+str(playerNumber)).encode())
+        self.connection.sendall((ITISPLAYERNUMBER+str(playerNumber)).encode())
+        self.playerNumber = playerNumber
         playerNumber += 1
 
     def getMsg(self): #Client로 부터 입력을 받아오라고하는 메소드. 입력 받을때까지 서버는 스탑
         print("Waiting msg from the client...")
         data = self.connection.recv(1024)
         return data
+
+    def receive(self):
+        while True:
+
+            print("Waiting msg from the client...")
+            data = self.connection.recv(1024)
+            self.send_to_all_clients(data.decode())
+
+    def send_to_all_clients(self, msg):#채팅 커맨드와 누구로부터 왔는지 메세지 순서대로 데이터 전송
+        msg = ITISCHAT + str(self.playerNumber) + msg
+        print(msg)
+        for client in clients :
+            print(self.playerNumber, 'sanding message to ', client.port)#누구한테 보내는지 확인용
+            client.connection.send(msg.encode())
+
+    def run(self):
+        receiver = threading.Thread(target=self.receive)
+        receiver.start()
 
 
 class Server:
@@ -49,9 +72,9 @@ class Server:
 
         :return:
         '''
-        global GAME, GAMESTART, GAMEEND
+        #global GAME, GAMESTART, GAMEEND
         #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
-        GAME = GAMESTART
+
         print('Game start : //game\nSelect player : //turn + playernumber')
         data = input('> ')
 
@@ -91,7 +114,7 @@ class Server:
         :param ip : 메세지를 받고싶은Client의 IP
         :param port : 메세지를 받고싶은Client의 port
         '''
-        global GAME,GAMESTART, GAMEEND
+        global GAME, GAMESTART, GAMEEND
         print("Running requestMsgToClient...")
         for client in self.clients :
             if client.ip == ip and client.port == port :
@@ -118,14 +141,13 @@ class Server:
                 self.server.close()
             sys.exit(1)
 
-
     def run(self):
-        global MAXPLAYERNUMBER
         self.open_socket()
         self.server.listen(MAXPLAYERNUMBER)
         #b = threading.Thread(target= self.broadCast())
         #b.start()
-        while len(self.clients)!=MAXPLAYERNUMBER :
+
+        while len(self.clients)!=MAXPLAYERNUMBER:#접속 대기단계
 
             connection, (ip, port) = self.server.accept()
 
@@ -137,7 +159,7 @@ class Server:
 
         print('All clients are connected!')
 
-        while True:
+        while True:#접속 완료 후 단계
 
             self.gamestart()
 

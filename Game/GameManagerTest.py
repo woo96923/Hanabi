@@ -783,6 +783,27 @@ def testGame2():            # 25점 만점 테스트
 
     nextTurn(gm)
 
+def gametestManual():
+
+    gm = GameManager(initCards(5), 0, 0)
+    gm.client.connectWithServer()
+    gm.distributeCards()
+    printBoard(gm)
+
+    while True:
+        a = gm.client.run()
+        print(a)
+
+        if len(a)==3:
+            if a[1] in ['1','2','3','4','5']:
+                gm.doAction(Action(int(a[0]), Hint(int(a[1])), int(a[2]) ))
+            else:
+                gm.doAction(Action(int(a[0]), Hint(str(a[1])), int(a[2])))
+
+        elif len(a)==2:
+            gm.doAction(Action(int(a[0]), int(a[1])))
+
+        nextTurn(gm)
 
 # testGameS1()
 # testGameS2()

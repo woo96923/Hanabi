@@ -2,7 +2,10 @@ from Game.GameElements import Hint as Hint
 from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
+from Server.GameClient import Client
 
+SERVERIP = 'localhost' #문자열 형식으로 ex) '127.0.0.1'
+SERVERPORT = 6666
 
 # 시작버튼을 누르면 서버에서 게임 시작시 정보를 받아 게임매니저를 생성하고 게임이 시작된다.
 class GameManager:
@@ -36,6 +39,9 @@ class GameManager:
                                            self.__blueDiscardedCardCounter,
                                            self.__whiteDiscardedCardCounter,
                                            self.__yellowDiscardedCardCounter]
+
+        #추후 서버 ip주소를 입력하는 기능 추가예정
+        self.client = Client(SERVERIP, SERVERPORT)
 
     def isCardsEmpty(self):
         # 카드더미가 비었는지 확인하는 함수
