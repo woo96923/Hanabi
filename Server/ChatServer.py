@@ -2,7 +2,6 @@
 import socket
 import sys
 import threading
-import Server.Commends
 
 
 MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐

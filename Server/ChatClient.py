@@ -3,7 +3,6 @@ import threading
 import sys
 import types
 import time
-import Server.Commends
 
 COMMENDKEY = '//'
 ITISCHAT = '#C'
