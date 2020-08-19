@@ -22,7 +22,6 @@ def initRandomCards():
 
 
 def initCards(number=0):
-
     if number is 1:
         return [Card("Y", 3), Card("R", 4), Card("G", 1), Card("R", 5), Card("G", 1), Card("W", 4), Card("W", 4), Card("Y", 4), Card("W", 3), Card("W", 1), Card("R", 4), Card("Y", 1), Card("G", 1), Card("B", 4), Card("B", 5), Card("R", 3), Card("Y", 4), Card("B", 4), Card("W", 2), Card("W", 1), Card("B", 3), Card("B", 3), Card("B", 1), Card("R", 2), Card("Y", 3), Card("R", 2), Card("G", 3), Card("B", 1), Card("R", 3), Card("Y", 1), Card("W", 3), Card("G", 4), Card("Y", 2), Card("B", 2), Card("R", 1), Card("G", 3), Card("W", 2), Card("R", 1), Card("Y", 5), Card("G", 4), Card("R", 1), Card("B", 1), Card("Y", 1), Card("G", 2), Card("G", 2), Card("W", 5), Card("G", 5), Card("Y", 2), Card("B", 2), Card("W", 1)]
     if number is 2:
@@ -44,7 +43,7 @@ def printBoard(gameManager: GameManager):
     print("                                 Played              Discarded")
 
     playedCards = gameManager.getPlayedCards("R")
-    discardedCards = gameManager.getDiscardedCards("R")
+    discardedCards = gameManager.getDiscardedCardCounter("R")
     print(" No         %2s|%2s|%2s|%2s          %-20s%s" % (0, 1, 2, 3, playedCards, discardedCards))
 
     colors = ["G", "B", "W", "Y"]
@@ -55,7 +54,7 @@ def printBoard(gameManager: GameManager):
 
         playerDeckString = str(gameManager.getPlayerDeck(i))
         playedCards = gameManager.getPlayedCards(colors[i])
-        discardedCards = gameManager.getDiscardedCards(colors[i])
+        discardedCards = gameManager.getDiscardedCardCounter(colors[i])
 
         print("%sPlayer %d - %s          %-20s%s" % (marker, i, playerDeckString, playedCards, discardedCards))
     print()
@@ -807,10 +806,8 @@ def gametestManual():
 
         nextTurn(gm)
 
-gametestManual()
-#testGameS1()
+# testGameS1()
 # testGameS2()
 # testGameS3()
-#testGame1()
+# testGame1()
 # testGame2()
-
