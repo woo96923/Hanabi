@@ -5,7 +5,7 @@ import threading
 import time
 
 
-MAXPLAYERNUMBER = 2 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
+MAXPLAYERNUMBER = 4 #실제로 만들어서 플레이 할 때는 이걸 4로 바꾸면 댐
 ITISACTION = '//'
 ITISCHAT = '#C'
 ITISPLAYERNUMBER = '#P'
@@ -74,12 +74,6 @@ class Server:
 
 
     def fullPlayer(self):
-        '''
-
-        :return:
-        '''
-        #global GAME, GAMESTART, GAMEEND
-        #게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
 
         print('Game start : //game\nSelect player : //turn + playernumber')
         data = input('> ')
@@ -88,15 +82,8 @@ class Server:
             while True:  # 추후에 게임변수 넣어서 끊고 하고 그럴거임
                 self.gameStart()
 
-
-
-        elif data[:6] == '//turn':
-            self.send_to_all_clients(data)
-            clientNumber = int(data[6]) - 1
-            self.requestMsgToClient(clients[clientNumber].ip,clients[clientNumber].port)
-
         else:
-            print("please enter right commenc")
+            print("please enter right commend")
 
     def gameStart(self):
         for number, client in enumerate(clients):
