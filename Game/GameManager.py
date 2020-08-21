@@ -2,8 +2,7 @@ from Game.GameElements import Hint as Hint
 from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
-from Server.GameServer import Server
-from Server.GameClient import client
+from Server.Client import Client
 
 SERVERIP = 'localhost' #문자열 형식으로 ex) '127.0.0.1'
 SERVERPORT = 6666
@@ -38,7 +37,7 @@ class GameManager:
         self.__yellowDiscardedCards = []
 
         #Client
-        self.client = client(SERVERIP, SERVERPORT)
+        self.client = Client(SERVERIP, SERVERPORT)
         '''
         일단은 localhost를 IP로 지정해두어서 테스트하기에는 편하게 해두었음
         추후 포팅을 이용하여 외부 네트워트에서 접속된 디바이스와도 통신이 가능하게 업데이트 예정
@@ -245,3 +244,8 @@ class GameManager:
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
         print()
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
+
+    def checkCommend(self,data):
+        while True:
+            if data[0:2] == '//':
+                return

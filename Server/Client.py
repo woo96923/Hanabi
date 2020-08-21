@@ -1,8 +1,6 @@
 import socket
 import threading
 import sys
-import types
-import time
 
 ITISACTION = '//'
 ITISCHAT = '#C'
@@ -12,18 +10,16 @@ ITISWHOSTURN = '#T'
 
 # 깃 사용벙 연습중
 
-class client():
+class Client():
     def __init__(self, IP, port):
         self.IP = IP
         self.port = port
         self.size = 1024
         self.s = None
-        # self.playerNumber = playerNumber
 
     def connectWithServer(self):
         try:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            host = socket.gethostname()
             self.s.connect((self.IP, self.port))
             print('connected with Server')
             recevePN = self.s.recv(self.size)
@@ -42,24 +38,18 @@ class client():
 
     def sendingMsg(self, s):
 
-        print("opend sendingMsg Thread")
         while True:
-            data = input('>>>')
-            if data[0:2] not in [ITISPLAYERNUMBER, ITISWHOSTURN, ITISACTION]:
-                print('it is chat!', data[0:2])
+            data = input()
+            if data[0:2] not in [ITISPLAYERNUMBER, ITISWHOSTURN, ITISACTION]:  #  커맨드가 없으면 채팅 커맨드 붙임
                 data = ITISCHAT + str(self.playerNumber) + data
             s.send(data.encode())
-        print("Closed sendingMsg Thread")
         s.close()
 
     def gettingMsg(self, s):
 
-        print("opend gettingMsg Thread")
         while True:
-            print("waiting from server")
             data = s.recv(1024)
             self.sendToGame(data)
-        print("Closed gettingMsg Thread")
         s.close()
 
     def sendToGame(self, data):
@@ -72,17 +62,17 @@ class client():
             return data.decode()
 
         elif data.decode()[0:2] == ITISCHAT:  # 채팅이라면
-            print('\n', 'Player ', data.decode()[2], ' : ', data.decode()[3:])
+            if data.decode()[2] != self.playerNumber:  # 채팅이 내꺼면 출력 x
+                print('Player ', data.decode()[2], ' : ', data.decode()[3:])
             return ITISCHAT
 
         elif data.decode()[0:2] == ITISWHOSTURN:  # 턴을 알려주는 커맨드라면
             if data.decode()[2] == self.playerNumber:
                 print('It\'s your turn!')
             else:
-                print('Player', data.decode()[2], '\'s playing')
+                print('Player', data.decode()[2], 'is playing')
             return ITISWHOSTURN
-        elif data.decode()[0:2] == ITISACTION:
-            return ITISACTION
+
 
 
     def myPlayerNumberis(self):
@@ -91,18 +81,14 @@ class client():
     def run(self):
 
         get = threading.Thread(target=self.gettingMsg, args=(self.s,))
-        # get.daemon = True
         get.start()
 
         send = threading.Thread(target=self.sendingMsg, args=(self.s,))
-        # send.daemon = True
         send.start()
 
-        # threading._start_new_thread(self.sendingMsg, ())
-        # threading._start_new_thread(self.gettingMsg, ())
-        # print("program is ended")
 
-
-c = client('localhost', 7777)
+'''
+c = Client('localhost', 7777)
 c.connectWithServer()
 c.run()
+'''
