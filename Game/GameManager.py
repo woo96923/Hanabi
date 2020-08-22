@@ -170,20 +170,30 @@ class GameManager:
             playerDeck = self.playerDecks[self.currentPlayerIndex]
             cardIndex = action.getCardIndex()
 
-            card = playerDeck.getCardOrNone(cardIndex)
-            discardedCards = self.getDiscardedCards(card.getColor())
 
-            discardedCards.append(card)
-            self.increaseHintToken()
+    def doActionDiscard(self, action: Action):
+        """
+        카드 버리기 Action 을 수행하는 함수
+        :param action: 수행할 action. type 은 무조건 2이어야 한다.
+        """
+        assert action.getActionType() == 2, "<discard> must be action type 2"
 
-            print("%d번 플레이어가 %s 카드를 버렸습니다." % (self.currentPlayerIndex, card))          # DEBUG
-            print("힌트 토큰이 하나 증가합니다.(8 이상이면 증가하지 않음)")           # DEBUG
+        playerDeck = self.playerDecks[self.currentPlayerIndex]
+        cardIndex = action.getCardIndex()
 
-            playerDeck.useCard(cardIndex)
-            if not self.isCardsEmpty():
-                self.giveOneCard(self.currentPlayerIndex)
-                print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)     # DEBUG
-            else:
+
+        card = playerDeck.getCardOrNone(cardIndex)
+        discardedCardCounter = self.getDiscardedCardCounter(card.getColor())
+        discardedCardCounter[card.getNumber()] += 1
+        self.increaseHintToken()
+
+        print("%d번 플레이어가 %s 카드를 버렸습니다." % (self.currentPlayerIndex, card))  # DEBUG
+        print("힌트 토큰이 하나 증가합니다.(8 이상이면 증가하지 않음)")  # DEBUG
+        playerDeck.useCard(cardIndex)
+        if not self.isCardsEmpty():
+            self.giveOneCard(self.currentPlayerIndex)
+            # print("%d번 플레이어가 새로운 카드를 받았습니다." % self.currentPlayerIndex)  # DEBUG
+            if self.isCardsEmpty():
                 if self.lastPlayerIndex < 0:
                     self.lastPlayerIndex = self.currentPlayerIndex
                     print("카드가 전부 떨어졌습니다. 다음 %d번 플레이어의 차례를 마치면 게임이 끝납니다." % (self.currentPlayerIndex - 1))      # DEBUG
