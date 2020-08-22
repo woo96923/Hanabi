@@ -59,7 +59,7 @@ class Client():
         :return: 어떤 명령어인지 커맨드일경우 커맨드 자체를 채팅이나 다른거일경우 해당 커맨드 키값만
         '''
         if data.decode()[0:2] == ITISACTION:  # 서버로 부터 받은게 커맨드라면
-            return data.decode()
+            return data.decode()  # //321
 
         elif data.decode()[0:2] == ITISCHAT:  # 채팅이라면
             if data.decode()[2] != self.playerNumber:  # 채팅이 내꺼면 출력 x
@@ -71,11 +71,11 @@ class Client():
                 print('It\'s your turn!')
             else:
                 print('Player', data.decode()[2], 'is playing')
-            return ITISWHOSTURN
+            return data.decode()  # #T2
 
 
 
-    def myPlayerNumberis(self):
+    def getPlayerNumber(self):
         return self.playerNumber
 
     def run(self):
@@ -87,8 +87,6 @@ class Client():
         send.start()
 
 
-'''
 c = Client('localhost', 7777)
 c.connectWithServer()
 c.run()
-'''
