@@ -73,22 +73,18 @@ class Client():
                 print('Player', data.decode()[2], 'is playing')
             return ITISWHOSTURN
 
-
+    def sendAction(self, Action):
+        self.s.sendall(Action.encode())
 
     def myPlayerNumberis(self):
         return self.playerNumber
 
     def run(self):
-
         get = threading.Thread(target=self.gettingMsg, args=(self.s,))
         get.start()
 
-        send = threading.Thread(target=self.sendingMsg, args=(self.s,))
-        send.start()
 
-
-'''
-c = Client('localhost', 7777)
-c.connectWithServer()
-c.run()
-'''
+if __name__ == "__main__":
+    c = Client('localhost', 7777)
+    c.connectWithServer()
+    c.run()
