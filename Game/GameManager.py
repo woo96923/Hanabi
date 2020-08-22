@@ -193,6 +193,7 @@ class GameManager:
         playerDeck = self.playerDecks[self.currentPlayerIndex]
         cardIndex = action.getCardIndex()
 
+
         card = playerDeck.getCardOrNone(cardIndex)
         discardedCardCounter = self.getDiscardedCardCounter(card.getColor())
         discardedCardCounter[card.getNumber()] += 1
