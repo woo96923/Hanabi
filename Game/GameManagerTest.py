@@ -3,7 +3,7 @@ from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
 from Game.GameManager import GameManager as GameManager
-from Server.gameTestClient import client
+
 import random
 
 
@@ -22,15 +22,15 @@ def initRandomCards():
 
 
 def initCards(number=0):
-    if number == 1:
+    if number is 1:
         return [Card("Y", 3), Card("R", 4), Card("G", 1), Card("R", 5), Card("G", 1), Card("W", 4), Card("W", 4), Card("Y", 4), Card("W", 3), Card("W", 1), Card("R", 4), Card("Y", 1), Card("G", 1), Card("B", 4), Card("B", 5), Card("R", 3), Card("Y", 4), Card("B", 4), Card("W", 2), Card("W", 1), Card("B", 3), Card("B", 3), Card("B", 1), Card("R", 2), Card("Y", 3), Card("R", 2), Card("G", 3), Card("B", 1), Card("R", 3), Card("Y", 1), Card("W", 3), Card("G", 4), Card("Y", 2), Card("B", 2), Card("R", 1), Card("G", 3), Card("W", 2), Card("R", 1), Card("Y", 5), Card("G", 4), Card("R", 1), Card("B", 1), Card("Y", 1), Card("G", 2), Card("G", 2), Card("W", 5), Card("G", 5), Card("Y", 2), Card("B", 2), Card("W", 1)]
-    if number == 2:
+    if number is 2:
         return [Card("R", 5), Card("G", 4), Card("B", 3), Card("B", 5), Card("G", 1), Card("B", 1), Card("W", 4), Card("W", 1), Card("Y", 2), Card("G", 1), Card("G", 2), Card("W", 5), Card("R", 3), Card("Y", 1), Card("G", 2), Card("Y", 4), Card("W", 1), Card("B", 2), Card("W", 2), Card("W", 1), Card("B", 1), Card("Y", 4), Card("R", 2), Card("B", 3), Card("G", 3), Card("R", 1), Card("Y", 3), Card("W", 3), Card("R", 3), Card("B", 4), Card("R", 1), Card("Y", 1), Card("G", 4), Card("B", 1), Card("G", 3), Card("G", 5), Card("B", 2), Card("Y", 5), Card("G", 1), Card("W", 2), Card("R", 1), Card("B", 4), Card("R", 2), Card("Y", 1), Card("W", 4), Card("Y", 3), Card("Y", 2), Card("R", 4), Card("W", 3), Card("R", 4)]
-    if number == 3:
+    if number is 3:
         return [Card("W", 4), Card("Y", 4), Card("W", 3), Card("Y", 5), Card("G", 1), Card("B", 1), Card("Y", 2), Card("Y", 3), Card("B", 3), Card("R", 4), Card("B", 1), Card("W", 1), Card("B", 3), Card("W", 2), Card("B", 5), Card("B", 4), Card("R", 2), Card("R", 4), Card("G", 1), Card("R", 1), Card("W", 1), Card("R", 5), Card("Y", 3), Card("Y", 4), Card("W", 3), Card("R", 1), Card("R", 1), Card("R", 3), Card("G", 2), Card("W", 2), Card("G", 2), Card("G", 3), Card("R", 2), Card("Y", 1), Card("Y", 1), Card("B", 1), Card("Y", 1), Card("Y", 2), Card("B", 2), Card("W", 4), Card("B", 2), Card("W", 5), Card("G", 3), Card("R", 3), Card("G", 5), Card("B", 4), Card("G", 4), Card("G", 1), Card("G", 4), Card("W", 1)]
-    if number == 4:
+    if number is 4:
         return [Card("G", 3), Card("Y", 2), Card("B", 3), Card("R", 4), Card("R", 3), Card("G", 2), Card("R", 3), Card("W", 5), Card("W", 1), Card("Y", 3), Card("B", 3), Card("G", 2), Card("Y", 1), Card("W", 1), Card("R", 1), Card("G", 4), Card("R", 1), Card("W", 3), Card("Y", 4), Card("B", 4), Card("W", 4), Card("W", 4), Card("G", 1), Card("Y", 1), Card("B", 2), Card("G", 3), Card("W", 2), Card("W", 2), Card("B", 1), Card("Y", 5), Card("R", 2), Card("R", 2), Card("W", 1), Card("B", 1), Card("R", 1), Card("Y", 3), Card("G", 5), Card("R", 5), Card("Y", 4), Card("G", 1), Card("B", 1), Card("B", 4), Card("W", 3), Card("G", 4), Card("Y", 1), Card("R", 4), Card("Y", 2), Card("B", 5), Card("G", 1), Card("B", 2)]
-    if number == 5:
+    if number is 5:
         return [Card("R", 1), Card("B", 2), Card("R", 3), Card("R", 2), Card("R", 4), Card("R", 4), Card("G", 3), Card("W", 5), Card("Y", 3), Card("B", 3), Card("B", 3), Card("B", 1), Card("G", 3), Card("R", 2), Card("R", 1), Card("B", 5), Card("Y", 1), Card("Y", 2), Card("B", 4), Card("G", 5), Card("G", 1), Card("G", 1), Card("G", 4), Card("W", 1), Card("W", 2), Card("W", 1), Card("G", 2), Card("R", 1), Card("R", 3), Card("R", 5), Card("B", 1), Card("W", 3), Card("Y", 2), Card("W", 2), Card("G", 4), Card("W", 4), Card("Y", 1), Card("B", 2), Card("G", 1), Card("W", 3), Card("Y", 1), Card("Y", 3), Card("G", 2), Card("Y", 4), Card("B", 1), Card("W", 4), Card("W", 1), Card("B", 4), Card("Y", 4), Card("Y", 5)]
     return initRandomCards()
 
@@ -43,7 +43,7 @@ def printBoard(gameManager: GameManager):
     print("                                 Played              Discarded")
 
     playedCards = gameManager.getPlayedCards("R")
-    discardedCards = gameManager.getDiscardedCards("R")
+    discardedCards = gameManager.getDiscardedCardCounter("R")
     print(" No         %2s|%2s|%2s|%2s          %-20s%s" % (0, 1, 2, 3, playedCards, discardedCards))
 
     colors = ["G", "B", "W", "Y"]
@@ -54,7 +54,7 @@ def printBoard(gameManager: GameManager):
 
         playerDeckString = str(gameManager.getPlayerDeck(i))
         playedCards = gameManager.getPlayedCards(colors[i])
-        discardedCards = gameManager.getDiscardedCards(colors[i])
+        discardedCards = gameManager.getDiscardedCardCounter(colors[i])
 
         print("%sPlayer %d - %s          %-20s%s" % (marker, i, playerDeckString, playedCards, discardedCards))
     print()
@@ -795,18 +795,19 @@ def gametestManual():
         a = gm.client.run()
         print(a)
 
-        if len(a)==5:
-            gm.doAction(Action(int(a[2]), Hint(str(a[3])), int(a[4]) ))
+        if len(a)==3:
+            if a[1] in ['1','2','3','4','5']:
+                gm.doAction(Action(int(a[0]), Hint(int(a[1])), int(a[2]) ))
+            else:
+                gm.doAction(Action(int(a[0]), Hint(str(a[1])), int(a[2])))
 
-        elif len(a)==4:
-            gm.doAction(Action(int(a[2]), int(a[3])))
+        elif len(a)==2:
+            gm.doAction(Action(int(a[0]), int(a[1])))
 
         nextTurn(gm)
 
-gametestManual()
-#testGameS1()
+# testGameS1()
 # testGameS2()
 # testGameS3()
-#testGame1()
+# testGame1()
 # testGame2()
-

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>783</width>
-    <height>407</height>
+    <width>501</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -618,14 +618,16 @@ border-width : 2px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string/>
+             <string>Notice
+player 1이 player 2에게 힌트를 줌 
+ ; ~~ 카드가 흰색이다.</string>
             </property>
            </widget>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_10">
             <item row="4" column="2">
-             <widget class="QLabel" name="throwY2">
+             <widget class="QLabel" name="label_12">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -705,7 +707,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="5" column="5">
-             <widget class="QLabel" name="throwW5">
+             <widget class="QLabel" name="label_5">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -721,7 +723,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="2" column="5">
-             <widget class="QLabel" name="throwG5">
+             <widget class="QLabel" name="label_23">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -737,7 +739,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="1" column="4">
-             <widget class="QLabel" name="throwR4">
+             <widget class="QLabel" name="label_7">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -807,7 +809,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="1" column="5">
-             <widget class="QLabel" name="throwR5">
+             <widget class="QLabel" name="label_24">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -839,7 +841,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="5" column="2">
-             <widget class="QLabel" name="throwW2">
+             <widget class="QLabel" name="label_30">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -855,7 +857,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="throwW1">
+             <widget class="QLabel" name="label_29">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -903,7 +905,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="5" column="3">
-             <widget class="QLabel" name="throwW3">
+             <widget class="QLabel" name="label_31">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -919,7 +921,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="4" column="3">
-             <widget class="QLabel" name="throwY3">
+             <widget class="QLabel" name="label_32">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -935,7 +937,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="throwY1">
+             <widget class="QLabel" name="label_28">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -951,7 +953,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="3" column="5">
-             <widget class="QLabel" name="throwB5">
+             <widget class="QLabel" name="label_34">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -967,7 +969,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="4" column="4">
-             <widget class="QLabel" name="throwY4">
+             <widget class="QLabel" name="label_35">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -983,7 +985,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="4" column="5">
-             <widget class="QLabel" name="throwY5">
+             <widget class="QLabel" name="label_36">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1015,7 +1017,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="3" column="4">
-             <widget class="QLabel" name="throwB4">
+             <widget class="QLabel" name="label_33">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1159,7 +1161,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="2" column="4">
-             <widget class="QLabel" name="throwG4">
+             <widget class="QLabel" name="label_22">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1175,7 +1177,7 @@ border-color : rgb(0, 0, 0)</string>
              </widget>
             </item>
             <item row="5" column="4">
-             <widget class="QLabel" name="throwW4">
+             <widget class="QLabel" name="label_37">
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1722,7 +1724,7 @@ border-color : rgb(0, 0, 0);
                <string>힌트 주기</string>
               </property>
               <property name="checkable">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1750,8 +1752,8 @@ border-color : rgb(0, 0, 0);
         </item>
         <item row="1" column="1" rowspan="2">
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
-           <widget class="QLabel" name="mainR1">
+          <item row="3" column="1">
+           <widget class="QLabel" name="mainG3">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -1764,14 +1766,40 @@ border-color : rgb(0, 0, 0);
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">
-border-radius : 20px;
+             <string notr="true">border-radius : 19px;
 border-style : solid;
 border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string>R</string>
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="mainG2">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1799,7 +1827,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string>G</string>
+             <string> </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1827,7 +1855,35 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string>B</string>
+             <string> </string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="mainR1">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string> </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1855,15 +1911,15 @@ border-width : 0px;
 border-color : rgb(0, 0, 0)</string>
             </property>
             <property name="text">
-             <string>W</string>
+             <string> </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="playedGreen">
+          <item row="5" column="0">
+           <widget class="QLabel" name="mainR5">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -1882,7 +1938,7 @@ border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string>0</string>
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1890,7 +1946,7 @@ border-color : rgb(0, 0, 0);</string>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="playedRed">
+           <widget class="QLabel" name="mainR2">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -1909,7 +1965,88 @@ border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string>0</string>
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLabel" name="mainG5">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="mainG4">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="mainR3">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1937,7 +2074,34 @@ border-width : 0px;
 border-color : rgb(0, 0, 0);</string>
             </property>
             <property name="text">
-             <string>Y</string>
+             <string> </string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="mainR4">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius : 20px;
+border-style : solid;
+border-width : 0px;
+border-color : rgb(0, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1958,7 +2122,7 @@ border-color : rgb(0, 0, 0);</string>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QLabel" name="playedBlue">
+           <widget class="QLabel" name="mainB2">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -1971,15 +2135,12 @@ border-color : rgb(0, 0, 0);</string>
              </font>
             </property>
             <property name="text">
-             <string>0</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <string/>
             </property>
            </widget>
           </item>
-          <item row="2" column="4">
-           <widget class="QLabel" name="playedYellow">
+          <item row="3" column="2">
+           <widget class="QLabel" name="mainB3">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -1992,15 +2153,48 @@ border-color : rgb(0, 0, 0);</string>
              </font>
             </property>
             <property name="text">
-             <string>0</string>
+             <string/>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="mainB4">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="mainB5">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QLabel" name="playedWhite">
+           <widget class="QLabel" name="mainY2">
             <property name="maximumSize">
              <size>
               <width>120</width>
@@ -2013,10 +2207,133 @@ border-color : rgb(0, 0, 0);</string>
              </font>
             </property>
             <property name="text">
-             <string>0</string>
+             <string/>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLabel" name="mainY3">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLabel" name="mainY4">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QLabel" name="mainY5">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="4">
+           <widget class="QLabel" name="mainW5">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <widget class="QLabel" name="mainW4">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4">
+           <widget class="QLabel" name="mainW3">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLabel" name="mainW2">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>HY중고딕</family>
+             </font>
+            </property>
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
@@ -2033,8 +2350,8 @@ border-color : rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>783</width>
-     <height>26</height>
+     <width>501</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>

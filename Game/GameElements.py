@@ -2,10 +2,10 @@ class Hint:
 
     def __init__(self, info):
         """
-        :param info: 색과 숫자 힌트. 문자열 혹은 숫자를 받을 수 있도록 자료형을 명시하지 않았음
+        :param info: 색과                                                            힌트. 문자열 혹은 숫자를 받을 수 있도록 자료형을 명시하지 않았음
         """
         assert info == "R" or info == "G" or info == "B" or info == "W" or info == "Y" \
-            or info == '1' or info == '2' or info == '3' or info == '4' or info == '5', "invalid card information"
+            or info == 1 or info == 2 or info == 3 or info == 4 or info == 5, "invalid card information"
 
         self.info = info
 

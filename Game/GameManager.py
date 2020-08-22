@@ -2,15 +2,17 @@ from Game.GameElements import Hint as Hint
 from Game.GameElements import Card as Card
 from Game.GameElements import Action as Action
 from Game.GameElements import PlayerDeck as PlayerDeck
-from Server.gameServer import Server
-from Server.gameTestClient import client
+from Server.Client import Client
 
-
+SERVERIP = 'localhost' #문자열 형식으로 ex) '127.0.0.1'
+SERVERPORT = 6666
+from GUI import HanabiAlpha01 as gameboard
 
 # 시작버튼을 누르면 서버에서 게임 시작시 정보를 받아 게임매니저를 생성하고 게임이 시작된다.
 class GameManager:
 
     def __init__(self, cards: list, clientIndex: int, beginnerIndex: int):
+        global SERVERIP, SERVERPORT
         self.playerDecks = [PlayerDeck() for i in range(4)]
         self.clientIndex = clientIndex
         self.currentPlayerIndex = beginnerIndex
@@ -35,7 +37,13 @@ class GameManager:
         self.__yellowDiscardedCards = []
 
         #Client
-        self.client = client('localhost',6666)
+        self.client = Client(SERVERIP, SERVERPORT)
+        '''
+        일단은 localhost를 IP로 지정해두어서 테스트하기에는 편하게 해두었음
+        추후 포팅을 이용하여 외부 네트워트에서 접속된 디바이스와도 통신이 가능하게 업데이트 예정
+        지금은 같은 공유기에서 접속하였을 때 연결 가능
+        아직은 수동으로 IP주소를 수정해주어야함
+        '''
 
 
     def isCardsEmpty(self):
@@ -43,7 +51,7 @@ class GameManager:
         return len(self.cards) == 0
 
     def isGameEnd(self):
-        return self.__lifeToken == 0
+        return self.__lifeToken is 0
 
     def giveOneCard(self, playerIndex: int):
         """
@@ -198,24 +206,29 @@ class GameManager:
         # 힌트를 받은 내용을 UI에게 넘겨주는 함수
         # 구체적인 구현 내용은 아직 미정.
 
-        assert len(cardIndexes) != 0, "invalid hint"
-
+        assert len(cardIndexes) is not 0, "invalid hint"
         if hint.isNumber():
             hintString = "숫자 %d" % hint.info
         else:
-            if hint.info == "R":
+            if hint.info is "R":
                 hintString = "빨간색"
-            elif hint.info == "G":
+            elif hint.info is "G":
                 hintString = "초록색"
-            elif hint.info == "B":
+            elif hint.info is "B":
                 hintString = "파란색"
-            elif hint.info == "W":
+            elif hint.info is "W":
                 hintString = "하얀색"
             else:
                 hintString = "노란색"
 
-        print("%d번 플레이어의 힌트: %d번 플레이어의 %s번째 카드는 %s 입니다."
-              % (self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+        if len(cardIndexes) == 0:
+            print("%d번 플레이어의 힌트: %d번 플레이어의 %s 카드는 없습니다."
+                  % (self.currentPlayerIndex, targetIndex, hintString))
+
+        else:
+            print("%d번 플레이어의 힌트: %d번 플레이어의 %s번째 카드는 %s 입니다."
+                  % (self.currentPlayerIndex, targetIndex, str(cardIndexes), hintString))
+
         print("힌트 토큰이 하나 감소합니다.")
 
     def calculateScore(self):
@@ -225,10 +238,14 @@ class GameManager:
 
     def canHint(self):
         # 힌트를 사용 가능한지
-        return self.__hintToken != 0
+        return self.__hintToken is not 0
 
     def onGameEnd(self):
         # 실제론 이 함수에서 UI랑 서버쪽에 게임이 끝났다 알려야 할듯?
         print()
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
-        #return 0
+
+    def checkCommend(self,data):
+        while True:
+            if data[0:2] == '//':
+                return

@@ -7,6 +7,11 @@
 |---|---|---|---|
 |임용택, 최현진|우진영, 임용택|문영빈, 조시호|임용택, 조시호|
 
+2020.07.13 : 게임로직 개발 시작   
+2020.07.24 : 게임로직 개발 및 테스트 완료     
+2020.08.03 : 서버 기능 개발 및 게임로직과 연동 테스트 완료      
+2020.08.17 : 게임로직 및 GUI 연동 1차 완료      
+2020.08.18 : 게임로직 GUI 연동 완료. 게임 끝까지 
 
 # [하나비] 코딩 표준
 =============
@@ -15,10 +20,12 @@
 
 History 
 * 2020.07.14 초안 작성 - 조시호
+* 2020.07.24 [기타-5] 매개변수 자료형 명시 항목 내용 추가 - 조시호
 
 참고한 문서
-* [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/))
+* [PEP 8 — Style Guide for Python Code | Python.org](https://www.python.org/dev/peps/pep-0008/)
 * [Bites of Code: PyQt Coding Style Guidelines](http://bitesofcode.blogspot.com/2011/10/pyqt-coding-style-guidelines.html)
+* [C# Coding Standards: Rule of Thumb](https://docs.google.com/document/d/1ymFFTVpR4lFEkUgYNJPRJda_eLKXMB6Ok4gpNWOo4rc/edit#heading=h.w8phdtkl6qc8)
 
 
 ## 기본 규칙
@@ -133,19 +140,17 @@ for i in list2: doSomething2()      # 이렇게 연달아 쓰지만 말 것
 ```
 3. import시 * 를 통해 전부를 가져오는 것이 아닌 사용하고자 하는 요소를 확실하게 명시하도록 한다.
 4. import는 한 줄에 한 요소만 작성한다.
-5. 함수 선언 시, 매개변수의 자료형에 대해 명시한다.
+5. 함수 선언 시, 매개변수의 자료형에 대해 명시한다. 단, 여러 종류의 자료형을 허용하는 경우 허용하는 자료형에 대해 매개변수가 아닌 Doc스트링에 명시한다.
 
 ``` python
-def TestForStateDataType(num1: int, num2, num3):
-    num1 = num1[:]
+def TestForStateDataType(num1: int, element):
     '''
     :param num1:
-    :param num2:
-    :param num3:
+    :param element: string, list      # Allow multiple data type
     :return:
     '''
-    return num1
+    함수 구현 생략
 
 
-TestForStateDataType('a', 3, 4)      #이와 같이 사용시 'a'에서 warning을 확인할 수 있다.
+TestForStateDataType('a', 'data')      #이와 같이 사용시 'a'에서 warning을 확인할 수 있다.
 ```
