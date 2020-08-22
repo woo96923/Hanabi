@@ -49,7 +49,7 @@ class client():
                 return data.decode()
 
 
-c=client('192.168.43.239',6666)
+c=client('localhost',6666)
 c.connectWithServer()
 while True:
     c.run()

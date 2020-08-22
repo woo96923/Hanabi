@@ -35,7 +35,7 @@ class GameManager:
         self.__yellowDiscardedCards = []
 
         #Client
-        self.client = client('192.168.43.239',6666)
+        self.client = client('localhost',6666)
 
 
     def isCardsEmpty(self):
