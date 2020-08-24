@@ -8,9 +8,7 @@ ITISPLAYERNUMBER = '#P'
 ITISWHOSTURN = '#T'
 
 
-# 깃 사용벙 연습중
-
-class Client():
+class Client:
     def __init__(self, IP, port):
         self.IP = IP
         self.port = port
@@ -36,16 +34,16 @@ class Client():
             print("Could not open socket: ")
             sys.exit(1)
 
-    def sendingMsg(self, s):
+    def sendMsg(self, s):
 
         while True:
             data = input()
-            if data[0:2] not in [ITISPLAYERNUMBER, ITISWHOSTURN, ITISACTION]:  #  커맨드가 없으면 채팅 커맨드 붙임
+            if data[0:2] not in [ITISPLAYERNUMBER, ITISWHOSTURN, ITISACTION]:  # 커맨드가 없으면 채팅 커맨드 붙임
                 data = ITISCHAT + str(self.playerNumber) + data
             s.send(data.encode())
         s.close()
 
-    def gettingMsg(self, s):
+    def getMsg(self, s):
 
         while True:
             data = s.recv(1024)
@@ -84,11 +82,15 @@ class Client():
     def sendAction(self, Action):
         self.s.sendall(Action.encode())
 
+    def getAction(self):
+        self.s.sendall(('#T'+str(self.playerNumber)).encode())
+
+
     def getPlayerNumber(self):
         return self.playerNumber
 
     def run(self):
-        get = threading.Thread(target=self.gettingMsg, args=(self.s,))
+        get = threading.Thread(target=self.getMsg, args=(self.s,))
         get.start()
 
 if __name__ == "__main__":

@@ -85,6 +85,7 @@ class Server:
         else:
             print("please enter right commend")
 
+
     def gameStart(self):
         for number, client in enumerate(clients):
             self.send_to_all_clients(ITISWHOSTURN + str(number))
@@ -94,14 +95,27 @@ class Server:
                     break
                 time.sleep(0.5)
 
+
     def send_to_all_clients(self, msg):#제에에발 문자열 그대로 넣으세요 아님 바꾸던가
         '''
         :param msg: 모든 Clients에게 보낼 메세지
         '''
         for client in clients :
-            print('sanding message to ',client.port,msg)
+            print('sanding message to ', client.port, msg)
             client.connection.send(msg.encode())
 
+
+    # def fullPlayer(self):
+    #
+    #     print('Game start : //game\nSelect player : //turn + playernumber')
+    #     data = input('> ')
+    #
+    #     if data == "//game":  # menu 1
+    #         while True:  # 추후에 게임변수 넣어서 끊고 하고 그럴거임
+    #             self.gameStart()
+    #
+    #     else:
+    #         print("please enter right commend")
 
     def open_socket(self):
         try:
@@ -132,7 +146,7 @@ class Server:
 
         while True:#접속 완료 후 단계
 
-            self.fullPlayer()
+            self.gameStart()
 
         self.server.close()
 

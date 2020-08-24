@@ -2,6 +2,7 @@
 import socket
 import sys
 import threading
+import random
 
 GAMESTART = 1
 GAMEEND = 0
@@ -13,7 +14,7 @@ playerNumber = 0
 
 class Client(threading.Thread):
 
-    def __init__(self, ip, port, connection):
+    def __init__(self, ip, port, connection, SEED):
         '''
         :param ip: 접속할 ip주소, 보통 서버의 주소를 의미함
         :param port: 서버에서 지정해준 포트번호와 일치해야함 일단은 기본적으로 6666을 이용하고있음
@@ -24,12 +25,13 @@ class Client(threading.Thread):
         self.connection = connection
         self.ip = ip
         self.port = port
-
+        self.SEED = SEED
         #플레이어 넘버를 통신을 통해 지정해줌으로써 관리를 편하게 하고 보기도 편하게함
         #들어오는 순서대로 1, 2, 3, 4임ㅎ
         #누구만대로냐고? 내맘ㅎ
         self.connection.sendall(('//PN'+str(playerNumber)).encode())
         playerNumber += 1
+        self.connection.sendall(('//SE' + str(self.SEED)).encode())
 
     def getMsg(self): #Client로 부터 입력을 받아오라고하는 메소드. 입력 받을때까지 서버는 스탑
         print("Waiting msg from the client...")
@@ -50,24 +52,24 @@ class Server:
 
         :return:
         '''
-        global GAME, GAMESTART, GAMEEND
-        # 게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
-        GAME = GAMESTART
-        print('Game start : //game\nSelect player : //turn + playernumber')
-        data = input('> ')
+        # global GAME, GAMESTART, GAMEEND
+        # # 게임이 끝날을 때 서버 통신을 끝내고 다음 게임을 준비하기 위해 집어넣은 변수들
+        # GAME = GAMESTART
+        # print('Game start : //game\nSelect player : //turn + playernumber')
+        # data = input('> ')
 
-        if data == "//game":#menu 1
-            while GAME == GAMESTART:
-                for number, client in enumerate(self.clients):
-                    self.send_to_all_clients('//turn'+str(number))
-                    self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
-                    if GAME == GAMEEND:
-                        break
+        # if data == "//game":#menu 1
+        while GAME == GAMESTART:
+            for number, client in enumerate(self.clients):
+                self.send_to_all_clients('//turn'+str(number))
+                self.requestMsgToClient(self.clients[number].ip, self.clients[number].port)
+                if GAME == GAMEEND:
+                    break
 
-        elif data[:6] == '//turn':
-            self.send_to_all_clients(data)
-            clientNumber = int(data[6]) - 1
-            self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
+        # elif data[:6] == '//turn':
+        #     self.send_to_all_clients(data)
+        #     clientNumber = int(data[6]) - 1
+        #     self.requestMsgToClient(self.clients[clientNumber].ip,self.clients[clientNumber].port)
 
     def send_to_all_clients(self, msg):
         # 제에에발 문자열 그대로 넣으세요 아님 바꾸던가
@@ -124,14 +126,13 @@ class Server:
         global MAXPLAYERNUMBER
         self.open_socket()
         self.server.listen(MAXPLAYERNUMBER)
-        #b = threading.Thread(target= self.broadCast())
-        #b.start()
+        SEED = random.random()
 
         while len(self.clients)!=MAXPLAYERNUMBER :
 
             connection, (ip, port) = self.server.accept()
 
-            c = Client(ip, port, connection)
+            c = Client(ip, port, connection, SEED)
             c.start()
 
             self.clients.append(c)

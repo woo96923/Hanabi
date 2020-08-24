@@ -10,22 +10,25 @@ class Client():
         self.port = port
         self.size = 1024
         self.s = None
-        #self.playerNumber = playerNumber
 
 
 
     def connectWithServer(self):
         try:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            host = socket.gethostname()
             self.s.connect((self.IP, self.port))
             print('connected with Server')
+
+            # 플레이어 넘버랑 시드 받음
             self.recevePN = self.s.recv(self.size)
             assert self.recevePN.decode()[0:4] == '//PN', "invalid PN format"
             self.playerNumber = self.recevePN.decode()[4]
             print('Your player number is ', self.playerNumber)
-            # r = threading.Thread(target=ReceveOreder(size))
-            # r.start()
+
+            self.receveSEED = self.s.recv(self.size)
+            assert self.receveSEED.decode()[0:4] == '//SE', "invalid PN format"
+            self.SEED = self.receveSEED.decode()[4:]
+            print('Your seed is ', self.SEED)
 
         except socket.error:
             if self.s:
@@ -50,8 +53,11 @@ class Client():
         Action = self.s.recv(self.size)
         return Action.decode()
 
+    def getSEED(self):
+        return self.SEED
+
 if __name__ == '__main__':
     c = Client('localhost', 6666)
     c.connectWithServer()
-    while True:
-        c.run()
+    # while True:
+    #     c.run()
