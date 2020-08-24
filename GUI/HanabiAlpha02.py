@@ -7,7 +7,7 @@ from Game.GameManager import GameManager as GM
 from Game.GameManagerTest import initCards
 from Game.GameElements import Action as Action
 from Game.GameElements import Hint as Hint
-from Server.Client import  Client
+from Server.GameClient import  Client
 import time
 
 FONTSIZE = 10
@@ -26,7 +26,7 @@ class HanabiGui(QMainWindow, MainAlpha):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.client = Client("localhost", 7777)
+        self.client = Client("localhost", 6666)
         self.client.connectWithServer()
         self.client.run()
 
@@ -49,6 +49,10 @@ class HanabiGui(QMainWindow, MainAlpha):
         self.setPalette(palette)
         self.notice.setText(" ")
         self.remainDeck.setText("남은 카드 \n%d" % len(self.gm.cards))
+        # 임의 부여함.
+
+
+
 
         # 들고 있는 카드의 list
         self.deckList = [[self.player0Deck0, self.player0Deck1, self.player0Deck2, self.player0Deck3],
@@ -56,8 +60,11 @@ class HanabiGui(QMainWindow, MainAlpha):
                          [self.player2Deck0, self.player2Deck1, self.player2Deck2, self.player2Deck3],
                          [self.player3Deck0, self.player3Deck1, self.player3Deck2, self.player3Deck3]]
 
+
+
+
         # 낸 카드의 list
-        self.droppedCardList = [self.playedRed, self.playedGreen, self.playedBlue, self.playedWhite, self.playedYellow]
+        self.drpoedCardList = [self.playedRed, self.playedGreen, self.playedBlue, self.playedWhite, self.playedYellow]
 
         # 버린 카드의 list
         self.thrownCardList = [[self.throwR1, self.throwR2, self.throwR3, self.throwR4, self.throwR5],
@@ -73,7 +80,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 목숨 토큰의 list
         self.lifeTokenList = [self.lifeToken0, self.lifeToken1, self.lifeToken2]
 
-        for card in self.droppedCardList:
+        for card in self.drpoedCardList:
             card.setText("0")
         print(type(self.player3Deck2))
         for deck in self.gm.playerDecks:
@@ -116,7 +123,7 @@ class HanabiGui(QMainWindow, MainAlpha):
         # 내 차례라면 창을 연다.
         if self.isTurn:
             print("Opening a Drop window...")
-            self.w = AppDropDeck(self, self.gm, self.deckList, self.droppedCardList,
+            self.w = AppDropDeck(self, self.gm, self.deckList, self.drpoedCardList,
                                  self.thrownCardList, self.notice, self.lifeTokenList, self.remainDeck, self.client)
             self.w.setGeometry(QRect(700, 400, 300, 200))
             self.w.show()

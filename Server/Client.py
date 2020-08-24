@@ -50,7 +50,15 @@ class Client():
         while True:
             data = s.recv(1024)
             self.sendToGame(data)
-        s.close()
+        self.s.close()
+
+    def sendAction(self, action: str):
+        '''
+
+        :param action: //21 이런 형식으로 ㄱㄱ
+        '''
+        assert action[0:2] == '//', 'Action error'
+        self.s.send(action.encode())
 
     def sendToGame(self, data):
         '''
@@ -73,20 +81,17 @@ class Client():
                 print('Player', data.decode()[2], 'is playing')
             return data.decode()  # #T2
 
-
+    def sendAction(self, Action):
+        self.s.sendall(Action.encode())
 
     def getPlayerNumber(self):
         return self.playerNumber
 
     def run(self):
-
         get = threading.Thread(target=self.gettingMsg, args=(self.s,))
         get.start()
 
-        send = threading.Thread(target=self.sendingMsg, args=(self.s,))
-        send.start()
-
-
-c = Client('localhost', 7777)
-c.connectWithServer()
-c.run()
+if __name__ == "__main__":
+    c = Client('localhost', 7777)
+    c.connectWithServer()
+    c.run()
