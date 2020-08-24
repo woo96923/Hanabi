@@ -793,6 +793,7 @@ def gametestManual():
 
     while True:
         a = gm.client.run()
+
         print(a)
 
         if len(a)==3:

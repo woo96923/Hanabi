@@ -246,6 +246,5 @@ class GameManager:
         print("***** 게임 종료! 최종점수: %d점 ******" % self.calculateScore())
 
     def checkCommend(self,data):
-        while True:
-            if data[0:2] == '//':
-                return
+        # 받은 데이터의 타입을 반환
+        return data[0:2]
